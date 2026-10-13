@@ -43,6 +43,8 @@ const todoListResponseSchema = {
   items: todoResponseSchema,
 } as const
 
+const createTodoRateLimit = { max: 20, timeWindow: '1 minute' } as const
+
 export const todoRoutes: FastifyPluginAsync<TodoRoutesOptions> = async (
   app,
   { createTodoController, getTodoByIdController, listTodosController },
@@ -50,6 +52,7 @@ export const todoRoutes: FastifyPluginAsync<TodoRoutesOptions> = async (
   app.post(
     '/todos',
     {
+      config: { rateLimit: createTodoRateLimit },
       schema: {
         body: createTodoBodySchema,
         response: { 201: todoResponseSchema },

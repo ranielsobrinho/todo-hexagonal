@@ -27,6 +27,15 @@ export function httpErrorHandler(
     return
   }
 
+  const statusCode = error.statusCode
+  if (typeof statusCode === 'number' && statusCode >= 400 && statusCode < 500) {
+    reply.status(statusCode).send({
+      error: error.code ?? 'ClientError',
+      message: error.message,
+    })
+    return
+  }
+
   request.log.error({ err: error }, 'unhandled error')
   reply.status(500).send({
     error: 'InternalServerError',
