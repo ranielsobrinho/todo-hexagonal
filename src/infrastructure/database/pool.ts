@@ -1,11 +1,16 @@
 import pg from 'pg'
+import { env } from '../config/env.js'
 
 const { Pool } = pg
 
 export const pool = new Pool({
-  host: process.env.PGHOST,
-  port: Number(process.env.PGPORT) || 5432,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
-  database: process.env.PGDATABASE,
+  host: env.pg.host,
+  port: env.pg.port,
+  user: env.pg.user,
+  password: env.pg.password,
+  database: env.pg.database,
+  max: env.pg.poolMax,
+  idleTimeoutMillis: 30_000,
+  connectionTimeoutMillis: 5_000,
+  ssl: env.pg.ssl,
 })

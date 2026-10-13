@@ -1,3 +1,4 @@
+import { env } from './infrastructure/config/env.js'
 import { pool } from './infrastructure/database/pool.js'
 import { makeTodoControllers } from './interfaces/http/factories/controllers/makeTodoControllers.js'
 import { buildServer } from './interfaces/http/server.js'
@@ -12,7 +13,7 @@ try {
   process.exit(1)
 }
 
-const port = Number(process.env.PORT) || 3000
+const port = env.port
 
 try {
   await app.listen({ port, host: '0.0.0.0' })
