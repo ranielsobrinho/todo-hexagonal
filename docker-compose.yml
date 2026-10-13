@@ -4,16 +4,20 @@ services:
     container_name: todo_hexagonal_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: todo
-      POSTGRES_PASSWORD: todo
-      POSTGRES_DB: todo_hexagonal
+      POSTGRES_USER: ${PGUSER:-todo}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-todo}
+      POSTGRES_DB: ${PGDATABASE:-todo_hexagonal}
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - todo_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U todo -d todo_hexagonal']
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${PGUSER:-todo} -d ${PGDATABASE:-todo_hexagonal}',
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
