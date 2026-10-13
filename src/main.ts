@@ -4,6 +4,14 @@ import { buildServer } from './interfaces/http/server.js'
 
 const app = buildServer(makeTodoControllers())
 
+try {
+  await pool.query('SELECT 1')
+} catch (error) {
+  app.log.error({ err: error }, 'failed to connect to the database')
+  await pool.end()
+  process.exit(1)
+}
+
 const port = Number(process.env.PORT) || 3000
 
 try {
