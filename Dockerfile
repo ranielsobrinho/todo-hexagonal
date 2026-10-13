@@ -5,7 +5,8 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@11.21.0 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile --ignore-scripts
+COPY proto ./proto
+RUN HUSKY=0 pnpm install --frozen-lockfile
 
 COPY tsconfig.json ./
 COPY src ./src
@@ -27,6 +28,6 @@ COPY --from=build /app/dist ./dist
 
 USER node
 
-EXPOSE 3000
+EXPOSE 3000 50051
 
 CMD ["node", "dist/main.js"]
