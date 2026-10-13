@@ -14,7 +14,11 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      exclude: ['src/main.ts', 'src/interfaces/http/factories/**'],
+      exclude: [
+        'src/main.ts',
+        'src/interfaces/http/factories/**',
+        'src/interfaces/grpc/generated/**',
+      ],
     },
   },
 })

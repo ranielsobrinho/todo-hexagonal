@@ -11,6 +11,12 @@ export type PgConfig = {
 export type AppEnv = {
   port: number
   pg: PgConfig
+  grpc: GrpcConfig
+}
+
+export type GrpcConfig = {
+  port: number
+  tls: { certPath: string; keyPath: string } | undefined
 }
 
 function required(source: NodeJS.ProcessEnv, name: string): string {
@@ -27,6 +33,9 @@ function toPositiveNumber(value: string | undefined, fallback: number): number {
 }
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
+  const certPath = source.GRPC_TLS_CERT
+  const keyPath = source.GRPC_TLS_KEY
+
   return {
     port: toPositiveNumber(source.PORT, 3000),
     pg: {
@@ -37,6 +46,10 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
       database: required(source, 'PGDATABASE'),
       poolMax: toPositiveNumber(source.PGPOOL_MAX, 10),
       ssl: source.PGSSL === 'true' ? { rejectUnauthorized: true } : undefined,
+    },
+    grpc: {
+      port: toPositiveNumber(source.GRPC_PORT, 50051),
+      tls: certPath && keyPath ? { certPath, keyPath } : undefined,
     },
   }
 }

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package todo.v1;
+
+message Todo {
+  string id = 1;
+  string name = 2;
+  string created_at = 3;
+  bool done = 4;
+}
+
+message ListTodosResponse {
+  repeated Todo todos = 1;
+}
+
+message CreateTodoRequest { string name = 1; }
+message GetTodoByIdRequest { string id = 1; }
+message ListTodosRequest { int32 limit = 1; int32 offset = 2; }
+
+service TodoService {
+  rpc CreateTodo (CreateTodoRequest) returns (Todo);
+  rpc GetTodoById (GetTodoByIdRequest) returns (Todo);
+  rpc ListTodos (ListTodosRequest) returns (ListTodosResponse);
+}

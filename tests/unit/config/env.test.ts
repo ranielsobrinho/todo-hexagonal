@@ -29,6 +29,7 @@ describe('loadEnv', () => {
         poolMax: 20,
         ssl: { rejectUnauthorized: true },
       },
+      grpc: { port: 50051, tls: undefined },
     })
   })
 
