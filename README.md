@@ -146,34 +146,51 @@ The HTTP server starts on `PORT` (defaults to `3000`; this project ships `.env` 
 
 ### Environment variables
 
-Copy `.env` and adjust as needed:
+Copy `.env.example` to `.env` and adjust as needed. The server **fails fast** if a required variable is missing.
 
-| Variable     | Description       | Example          |
-| ------------ | ----------------- | ---------------- |
-| `PORT`       | HTTP port         | `5000`           |
-| `PGHOST`     | Postgres host     | `localhost`      |
-| `PGPORT`     | Postgres port     | `5432`           |
-| `PGUSER`     | Postgres user     | `todo`           |
-| `PGPASSWORD` | Postgres password | `todo`           |
-| `PGDATABASE` | Postgres database | `todo_hexagonal` |
+| Variable     | Required | Default | Example          |
+| ------------ | -------- | ------- | ---------------- |
+| `PORT`       | no       | `3000`  | `5000`           |
+| `PGHOST`     | yes      | —       | `localhost`      |
+| `PGPORT`     | no       | `5432`  | `5432`           |
+| `PGUSER`     | yes      | —       | `todo`           |
+| `PGPASSWORD` | yes      | —       | `todo`           |
+| `PGDATABASE` | yes      | —       | `todo_hexagonal` |
+| `PGPOOL_MAX` | no       | `10`    | `20`             |
+| `PGSSL`      | no       | `false` | `true`           |
+
+`PGSSL=true` enables TLS to Postgres (`rejectUnauthorized: true`).
 
 ### Production build
 
 ```bash
 pnpm build   # tsc → dist/
-pnpm start   # node dist/main.js
+pnpm start   # node --env-file=.env dist/main.js
+```
+
+### Docker
+
+The included `Dockerfile` builds a multi-stage image and runs as the non-root `node` user:
+
+```bash
+docker build -t todo-hexagonal .
+docker run --rm -p 3000:3000 --env-file=.env todo-hexagonal
 ```
 
 ## API
 
 All application routes are versioned under `/api/v1`. Health check lives at the root.
 
-| Method | Endpoint            | Description               | Success | Errors                  |
-| ------ | ------------------- | ------------------------- | ------- | ----------------------- |
-| `POST` | `/api/v1/todos`     | Create a todo             | `201`   | `400` validation        |
-| `GET`  | `/api/v1/todos`     | List todos (newest first) | `200`   | —                       |
-| `GET`  | `/api/v1/todos/:id` | Get a todo by id          | `200`   | `400` validation, `404` |
-| `GET`  | `/health`           | Liveness + DB check       | `200`   | `503` database down     |
+| Method | Endpoint            | Description               | Success | Errors              |
+| ------ | ------------------- | ------------------------- | ------- | ------------------- |
+| `POST` | `/api/v1/todos`     | Create a todo             | `201`   | `400`, `429`        |
+| `GET`  | `/api/v1/todos`     | List todos (newest first) | `200`   | `400`, `429`        |
+| `GET`  | `/api/v1/todos/:id` | Get a todo by id (UUID)   | `200`   | `400`, `404`, `429` |
+| `GET`  | `/health`           | Liveness + DB check       | `200`   | `503`, `429`        |
+
+### Pagination
+
+`GET /api/v1/todos` accepts `limit` (1–100, default `50`) and `offset` (≥ 0, default `0`). The response is a bounded array.
 
 ### Examples
 
@@ -187,6 +204,9 @@ curl -X POST http://localhost:5000/api/v1/todos \
 # List
 curl http://localhost:5000/api/v1/todos
 
+# List (paginated)
+curl "http://localhost:5000/api/v1/todos?limit=20&offset=40"
+
 # Get by id
 curl http://localhost:5000/api/v1/todos/<uuid>
 
@@ -199,15 +219,31 @@ curl http://localhost:5000/health
 
 Controllers never format errors themselves. `httpErrorHandler` maps a domain `ApplicationError` (which carries a `code`) to an HTTP status:
 
-| Code / situation       | HTTP status |
-| ---------------------- | ----------- |
-| JSON-schema validation | `400`       |
-| `VALIDATION_ERROR`     | `400`       |
-| `NOT_FOUND`            | `404`       |
-| Any other domain code  | `422`       |
-| Unexpected error       | `500`       |
+| Code / situation                     | HTTP status |
+| ------------------------------------ | ----------- |
+| JSON-schema validation               | `400`       |
+| `VALIDATION_ERROR`                   | `400`       |
+| `NOT_FOUND`                          | `404`       |
+| Any other domain code                | `422`       |
+| Fastify client error (e.g. limiting) | `4xx`       |
+| Unexpected error                     | `500`       |
 
 Error body shape: `{ "error": "<code>", "message": "<human readable>" }`.
+
+## Security
+
+Defense in depth at the HTTP, validation and database layers:
+
+- **Security headers** — [`@fastify/helmet`](https://github.com/fastify/fastify-helmet) sets CSP, HSTS, `X-Content-Type-Options`, `X-Frame-Options` and more.
+- **Rate limiting** — [`@fastify/rate-limit`](https://github.com/fastify/fastify-rate-limit) applies a global `100 req/min` per IP limit; `POST /api/v1/todos` is stricter (`20 req/min`). Exceeding it returns `429`.
+- **Request limits** — 100 KB body limit plus `connectionTimeout` (10s), `requestTimeout` (15s) and `keepAliveTimeout` (72s) to mitigate slowloris and slow-body attacks.
+- **Strict input validation** — JSON schemas reject unknown properties, `:id` must be a UUID, `name` is capped at 255 chars and list queries are bounded.
+- **Parameterized SQL** — every query uses `$1` placeholders, so there is no SQL-injection surface.
+- **Fail-fast configuration** — required environment variables are validated at boot and the process exits if the database is unreachable.
+- **Hardened pool** — bounded pool size, idle/connection timeouts and optional TLS (`PGSSL=true`).
+- **Local infra** — Postgres binds to `127.0.0.1` only and reads credentials from the environment; the container image runs as non-root.
+
+Out of scope for now: authentication/authorization (all endpoints are public), CORS (no browser client) and TLS termination (expected at the proxy).
 
 ## Testing
 
