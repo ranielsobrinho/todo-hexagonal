@@ -68,6 +68,25 @@ describe('todos routes', () => {
     expect(response.statusCode).toBe(404)
   })
 
+  it('GET /todos/:id returns 400 for a non-uuid id', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos/not-a-uuid`,
+    })
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  it('POST /todos returns 400 when name is too long', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'a'.repeat(256) },
+    })
+
+    expect(response.statusCode).toBe(400)
+  })
+
   it('GET /todos lists todos', async () => {
     await app.inject({
       method: 'POST',
@@ -88,6 +107,39 @@ describe('todos routes', () => {
     expect(response.statusCode).toBe(200)
     const body = response.json()
     expect(body).toHaveLength(2)
+  })
+
+  it('GET /todos paginates with limit and offset', async () => {
+    for (const name of ['a', 'b', 'c']) {
+      await app.inject({
+        method: 'POST',
+        url: `${API_PREFIX}/todos`,
+        payload: { name },
+      })
+    }
+
+    const limited = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos?limit=2`,
+    })
+    const offset = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos?limit=2&offset=2`,
+    })
+
+    expect(limited.statusCode).toBe(200)
+    expect(limited.json()).toHaveLength(2)
+    expect(offset.statusCode).toBe(200)
+    expect(offset.json()).toHaveLength(1)
+  })
+
+  it('GET /todos returns 400 for an out-of-range limit', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos?limit=0`,
+    })
+
+    expect(response.statusCode).toBe(400)
   })
 
   it('is not served without the version prefix', async () => {

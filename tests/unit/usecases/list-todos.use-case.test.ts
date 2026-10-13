@@ -13,7 +13,7 @@ describe('ListTodosUseCase', () => {
     repository.list.mockResolvedValue(todos)
     const useCase = new ListTodosUseCase(asTodoRepository(repository))
 
-    await expect(useCase.execute()).resolves.toBe(todos)
-    expect(repository.list).toHaveBeenCalledOnce()
+    await expect(useCase.execute({ limit: 10, offset: 5 })).resolves.toBe(todos)
+    expect(repository.list).toHaveBeenCalledWith({ limit: 10, offset: 5 })
   })
 })

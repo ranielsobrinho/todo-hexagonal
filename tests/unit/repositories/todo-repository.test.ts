@@ -79,11 +79,23 @@ describe('PgTodoRepository', () => {
     })
     const repository = new PgTodoRepository(pool)
 
-    const todos = await repository.list()
+    const todos = await repository.list({ limit: 20, offset: 40 })
 
     expect(query.mock.calls[0][0]).toContain('ORDER BY created_at DESC')
+    expect(query.mock.calls[0][0]).toContain('LIMIT $1 OFFSET $2')
+    expect(query.mock.calls[0][1]).toEqual([20, 40])
     expect(todos).toHaveLength(2)
     expect(todos[0]).toMatchObject({ id: 'id-1' })
     expect(todos[1]).toMatchObject({ id: 'id-2' })
+  })
+
+  it('list falls back to the default limit and offset', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rows: [] })
+    const repository = new PgTodoRepository(pool)
+
+    await repository.list()
+
+    expect(query.mock.calls[0][1]).toEqual([50, 0])
   })
 })

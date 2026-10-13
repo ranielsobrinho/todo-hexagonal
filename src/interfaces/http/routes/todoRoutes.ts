@@ -14,7 +14,7 @@ const createTodoBodySchema = {
   required: ['name'],
   additionalProperties: false,
   properties: {
-    name: { type: 'string', minLength: 1 },
+    name: { type: 'string', minLength: 1, maxLength: 255 },
   },
 } as const
 
@@ -23,7 +23,16 @@ const getTodoByIdParamsSchema = {
   required: ['id'],
   additionalProperties: false,
   properties: {
-    id: { type: 'string', minLength: 36 },
+    id: { type: 'string', format: 'uuid' },
+  },
+} as const
+
+const listTodosQuerySchema = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    limit: { type: 'integer', minimum: 1, maximum: 100, default: 50 },
+    offset: { type: 'integer', minimum: 0, default: 0 },
   },
 } as const
 
@@ -64,6 +73,7 @@ export const todoRoutes: FastifyPluginAsync<TodoRoutesOptions> = async (
     '/todos',
     {
       schema: {
+        querystring: listTodosQuerySchema,
         response: { 200: todoListResponseSchema },
       },
     },

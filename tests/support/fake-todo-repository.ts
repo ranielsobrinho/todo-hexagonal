@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { Todo } from '../../src/domain/entities/Todo.js'
 import { ApplicationError } from '../../src/domain/errors/ApplicationError.js'
 import type {
+  ListTodosParams,
   TodoParam,
   TodoRepository,
 } from '../../src/domain/repositories/ITodoRepository.js'
@@ -31,9 +32,12 @@ export class FakeTodoRepository implements TodoRepository {
     return todo
   }
 
-  async list(): Promise<Todo[]> {
-    return [...this.todos.values()].sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
-    )
+  async list(params: ListTodosParams = {}): Promise<Todo[]> {
+    const limit = params.limit ?? 50
+    const offset = params.offset ?? 0
+
+    return [...this.todos.values()]
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(offset, offset + limit)
   }
 }

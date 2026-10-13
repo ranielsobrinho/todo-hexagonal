@@ -13,9 +13,12 @@ describe('ListTodosController', () => {
     const controller = new ListTodosController(listTodosUseCase)
     const reply = createReplyMock()
 
-    await controller.handle({} as never, reply)
+    await controller.handle({ query: { limit: 10, offset: 0 } } as never, reply)
 
-    expect(listTodosUseCase.execute).toHaveBeenCalledOnce()
+    expect(listTodosUseCase.execute).toHaveBeenCalledWith({
+      limit: 10,
+      offset: 0,
+    })
     expect(reply.status).toHaveBeenCalledWith(200)
     expect(reply.send).toHaveBeenCalledWith([
       {
@@ -31,5 +34,18 @@ describe('ListTodosController', () => {
         done: false,
       },
     ])
+  })
+
+  it('forwards undefined params when the query is absent', async () => {
+    const listTodosUseCase = { execute: vi.fn().mockResolvedValue([]) }
+    const controller = new ListTodosController(listTodosUseCase)
+    const reply = createReplyMock()
+
+    await controller.handle({} as never, reply)
+
+    expect(listTodosUseCase.execute).toHaveBeenCalledWith({
+      limit: undefined,
+      offset: undefined,
+    })
   })
 })

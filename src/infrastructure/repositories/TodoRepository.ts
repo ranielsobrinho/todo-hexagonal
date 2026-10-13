@@ -3,9 +3,13 @@ import { pool } from '../database/pool.js'
 import { Todo } from '../../domain/entities/Todo.js'
 import { ApplicationError } from '../../domain/errors/ApplicationError.js'
 import type {
+  ListTodosParams,
   TodoParam,
   TodoRepository,
 } from '../../domain/repositories/ITodoRepository.js'
+
+const DEFAULT_LIST_LIMIT = 50
+const DEFAULT_LIST_OFFSET = 0
 
 type TodoRow = {
   id: string
@@ -48,9 +52,13 @@ export class PgTodoRepository implements TodoRepository {
     return toTodo(rows[0])
   }
 
-  async list(): Promise<Todo[]> {
+  async list(params: ListTodosParams = {}): Promise<Todo[]> {
+    const limit = params.limit ?? DEFAULT_LIST_LIMIT
+    const offset = params.offset ?? DEFAULT_LIST_OFFSET
+
     const { rows } = await this.db.query<TodoRow>(
-      `SELECT id, name, created_at, done FROM todos ORDER BY created_at DESC`,
+      `SELECT id, name, created_at, done FROM todos ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+      [limit, offset],
     )
 
     return rows.map(toTodo)
