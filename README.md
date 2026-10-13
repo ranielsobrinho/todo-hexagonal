@@ -220,7 +220,10 @@ Ports make this possible: the same `buildServer(dependencies)` used in productio
 
 ```bash
 pnpm test            # run the whole suite once
-pnpm test:watch      # watch mode
+pnpm test:unit       # only unit tests (once)
+pnpm test:unit:watch # only unit tests, watch mode (TDD)
+pnpm test:e2e        # only e2e tests
+pnpm test:watch      # all tests in watch mode
 pnpm test:coverage   # run with V8 coverage report
 pnpm test:related <files...>   # only tests affected by the given files
 pnpm typecheck:tests # type-check src and tests
@@ -243,8 +246,11 @@ Husky runs checks automatically:
 | `format`          | Format the codebase with Prettier            |
 | `format:check`    | Verify formatting without writing            |
 | `test`            | Run the test suite once                      |
+| `test:unit`       | Run only unit tests (once)                   |
+| `test:unit:watch` | Run only unit tests in watch mode (TDD)      |
+| `test:e2e`        | Run only e2e tests                           |
 | `test:related`    | Run tests affected by the given files        |
-| `test:watch`      | Run tests in watch mode                      |
+| `test:watch`      | Run all tests in watch mode                  |
 | `test:coverage`   | Run tests with coverage                      |
 | `typecheck:tests` | Type-check `src` and `tests`                 |
 | `prepare`         | Install Husky hooks (runs on `pnpm install`) |
