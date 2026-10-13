@@ -10,9 +10,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
+    "test:related": "vitest related --run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "typecheck:tests": "tsc -p tsconfig.test.json"
+    "typecheck:tests": "tsc -p tsconfig.test.json",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -26,9 +28,15 @@
     "@types/node": "^26.6.4",
     "@types/pg": "^8.23.1",
     "@vitest/coverage-v8": "^5.0.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.4"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown",
+    "*.{ts,mts,cts}": "vitest related --run"
   }
 }
