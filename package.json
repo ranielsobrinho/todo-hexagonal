@@ -9,7 +9,10 @@
     "start": "node dist/main.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck:tests": "tsc -p tsconfig.test.json"
   },
   "keywords": [],
   "author": "",
@@ -22,8 +25,10 @@
   "devDependencies": {
     "@types/node": "^26.6.4",
     "@types/pg": "^8.23.1",
+    "@vitest/coverage-v8": "^5.0.4",
     "prettier": "^3.9.10",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
   }
 }
