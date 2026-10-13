@@ -7,7 +7,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      exclude: ['src/main.ts'],
+      exclude: ['src/main.ts', 'src/interfaces/http/factories/**'],
     },
   },
 })

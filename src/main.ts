@@ -1,26 +1,8 @@
 import { pool } from './infrastructure/database/pool.js'
-import { PgTodoRepository } from './infrastructure/repositories/TodoRepository.js'
-import { CreateTodoController } from './interfaces/controllers/CreateTodoController.js'
-import { GetTodoByIdController } from './interfaces/controllers/GetTodoByIdController.js'
-import { ListTodosController } from './interfaces/controllers/ListTodosController.js'
+import { makeTodoControllers } from './interfaces/http/factories/controllers/makeTodoControllers.js'
 import { buildServer } from './interfaces/http/server.js'
-import { CreateTodoUseCase } from './usecases/todo/CreateTodoUseCase.js'
-import { GetTodoByIdUseCase } from './usecases/todo/GetTodoByIdUseCase.js'
-import { ListTodosUseCase } from './usecases/todo/ListTodosUseCase.js'
 
-const todoRepository = new PgTodoRepository(pool)
-const createTodoUseCase = new CreateTodoUseCase(todoRepository)
-const getTodoByIdUseCase = new GetTodoByIdUseCase(todoRepository)
-const listTodosUseCase = new ListTodosUseCase(todoRepository)
-const createTodoController = new CreateTodoController(createTodoUseCase)
-const getTodoByIdController = new GetTodoByIdController(getTodoByIdUseCase)
-const listTodosController = new ListTodosController(listTodosUseCase)
-
-const app = buildServer({
-  createTodoController,
-  getTodoByIdController,
-  listTodosController,
-})
+const app = buildServer(makeTodoControllers())
 
 const port = Number(process.env.PORT) || 3000
 
