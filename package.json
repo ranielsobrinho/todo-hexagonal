@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/main.ts",
-    "build": "tsc",
+    "build": "pnpm proto:generate && tsc",
     "start": "node --env-file=.env dist/main.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -17,15 +17,18 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck:tests": "tsc -p tsconfig.test.json",
-    "prepare": "husky"
+    "prepare": "husky && pnpm proto:generate",
+    "proto:generate": "mkdir -p src/interfaces/grpc/generated && grpc_tools_node_protoc --proto_path=. --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=src/interfaces/grpc/generated --ts_proto_opt=outputServices=grpc-js,esModuleInterop=true,env=node proto/todo.proto"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@bufbuild/protobuf": "^2.16.0",
     "@fastify/helmet": "^13.1.2",
     "@fastify/rate-limit": "^11.2.1",
+    "@grpc/grpc-js": "^1.14.6",
     "fastify": "^5.12.5",
     "pg": "^8.23.1"
   },
@@ -33,9 +36,11 @@
     "@types/node": "^26.6.4",
     "@types/pg": "^8.23.1",
     "@vitest/coverage-v8": "^5.0.4",
+    "grpc-tools": "^1.13.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
+    "ts-proto": "^2.15.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.4"

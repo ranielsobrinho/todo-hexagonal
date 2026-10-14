@@ -1,9 +1,26 @@
+import { ServerCredentials } from '@grpc/grpc-js'
 import { env } from './infrastructure/config/env.js'
 import { pool } from './infrastructure/database/pool.js'
+import { makeTodoHandlers } from './interfaces/grpc/factories/makeTodoHandlers.js'
+import { buildGrpcServer } from './interfaces/grpc/server.js'
 import { makeTodoControllers } from './interfaces/http/factories/controllers/makeTodoControllers.js'
 import { buildServer } from './interfaces/http/server.js'
+import { readFileSync } from 'node:fs'
 
 const app = buildServer(makeTodoControllers())
+
+const grpcCredentials = env.grpc.tls
+  ? ServerCredentials.createSsl(
+      null,
+      [
+        {
+          private_key: readFileSync(env.grpc.tls.keyPath),
+          cert_chain: readFileSync(env.grpc.tls.certPath),
+        },
+      ],
+      false,
+    )
+  : ServerCredentials.createInsecure()
 
 try {
   await pool.query('SELECT 1')
@@ -22,9 +39,24 @@ try {
   process.exit(1)
 }
 
+const grpcServer = buildGrpcServer(makeTodoHandlers())
+grpcServer.bindAsync(
+  `0.0.0.0:${env.grpc.port}`,
+  grpcCredentials,
+  (err, port) => {
+    if (err) {
+      app.log.error(err)
+      process.exit(1)
+    }
+
+    app.log.info(`gRPC listening on ${port}`)
+  },
+)
+
 const shutdown = async (signal: string): Promise<void> => {
   app.log.info(`received ${signal}, shutting down`)
   await app.close()
+  await new Promise<void>((resolve) => grpcServer.tryShutdown(() => resolve()))
   await pool.end()
   process.exit(0)
 }
