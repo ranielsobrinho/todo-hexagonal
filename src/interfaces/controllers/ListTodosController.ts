@@ -5,6 +5,7 @@ import { TodoPresenter } from '../presenters/TodoPresenter.js'
 type ListTodosQuery = {
   limit?: number
   offset?: number
+  done?: boolean
 }
 
 export class ListTodosController {
@@ -18,6 +19,7 @@ export class ListTodosController {
     const todos = await this.listTodosUseCase.execute({
       limit: query.limit,
       offset: query.offset,
+      done: query.done === true ? undefined : false,
     })
     await reply.status(200).send(TodoPresenter.toJSONList(todos))
   }
