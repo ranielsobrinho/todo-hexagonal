@@ -5,6 +5,9 @@ export type MockedTodoRepository = {
   save: ReturnType<typeof vi.fn>
   getById: ReturnType<typeof vi.fn>
   list: ReturnType<typeof vi.fn>
+  update: ReturnType<typeof vi.fn>
+  delete: ReturnType<typeof vi.fn>
+  finish: ReturnType<typeof vi.fn>
 }
 
 export function createRepositoryMock(): MockedTodoRepository {
@@ -12,6 +15,9 @@ export function createRepositoryMock(): MockedTodoRepository {
     save: vi.fn(),
     getById: vi.fn(),
     list: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    finish: vi.fn(),
   }
 }
 

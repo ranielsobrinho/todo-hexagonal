@@ -97,5 +97,107 @@ describe('PgTodoRepository', () => {
     await repository.list()
 
     expect(query.mock.calls[0][1]).toEqual([50, 0])
+    expect(query.mock.calls[0][0]).not.toContain('WHERE done')
+  })
+
+  it('list filters by done=false when asked for pending todos', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rows: [] })
+    const repository = new PgTodoRepository(pool)
+
+    await repository.list({ done: false })
+
+    expect(query.mock.calls[0][0]).toContain('WHERE done = $3')
+    expect(query.mock.calls[0][1]).toEqual([50, 0, false])
+  })
+
+  it('list filters by done=true when asked for finished todos', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rows: [] })
+    const repository = new PgTodoRepository(pool)
+
+    await repository.list({ done: true })
+
+    expect(query.mock.calls[0][0]).toContain('WHERE done = $3')
+    expect(query.mock.calls[0][1]).toEqual([50, 0, true])
+  })
+
+  it('update renames and maps the returned row', async () => {
+    const { query, pool } = createPoolMock()
+    const createdAt = new Date('2026-01-01T00:00:00.000Z')
+    query.mockResolvedValue({
+      rows: [
+        { id: 'id-1', name: 'renamed', created_at: createdAt, done: false },
+      ],
+    })
+    const repository = new PgTodoRepository(pool)
+
+    const todo = await repository.update('id-1', { name: 'renamed' })
+
+    expect(query.mock.calls[0][0]).toContain('UPDATE todos SET name = $1')
+    expect(query.mock.calls[0][0]).not.toContain('RETURNING *')
+    expect(query.mock.calls[0][0]).toContain(
+      'RETURNING id, name, created_at, done',
+    )
+    expect(query.mock.calls[0][1]).toEqual(['renamed', 'id-1'])
+    expect(todo).toMatchObject({ id: 'id-1', name: 'renamed' })
+  })
+
+  it('update throws NOT_FOUND when there is no row', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rows: [] })
+    const repository = new PgTodoRepository(pool)
+
+    await expect(
+      repository.update('missing', { name: 'renamed' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('delete removes the todo', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rowCount: 1 })
+    const repository = new PgTodoRepository(pool)
+
+    await expect(repository.delete('id-1')).resolves.toBeUndefined()
+
+    expect(query.mock.calls[0][0]).toContain('DELETE FROM todos WHERE id = $1')
+    expect(query.mock.calls[0][1]).toEqual(['id-1'])
+  })
+
+  it('delete throws NOT_FOUND when there is no row', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rowCount: 0 })
+    const repository = new PgTodoRepository(pool)
+
+    await expect(repository.delete('missing')).rejects.toBeInstanceOf(
+      ApplicationError,
+    )
+    await expect(repository.delete('missing')).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    })
+  })
+
+  it('finish marks the todo as done', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rowCount: 1 })
+    const repository = new PgTodoRepository(pool)
+
+    await expect(repository.finish('id-1')).resolves.toBeUndefined()
+
+    expect(query.mock.calls[0][0]).toContain('UPDATE todos SET done = true')
+    expect(query.mock.calls[0][1]).toEqual(['id-1'])
+  })
+
+  it('finish throws NOT_FOUND when there is no row', async () => {
+    const { query, pool } = createPoolMock()
+    query.mockResolvedValue({ rowCount: 0 })
+    const repository = new PgTodoRepository(pool)
+
+    await expect(repository.finish('missing')).rejects.toBeInstanceOf(
+      ApplicationError,
+    )
+    await expect(repository.finish('missing')).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    })
   })
 })

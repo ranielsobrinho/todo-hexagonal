@@ -18,6 +18,7 @@ describe('ListTodosController', () => {
     expect(listTodosUseCase.execute).toHaveBeenCalledWith({
       limit: 10,
       offset: 0,
+      done: false,
     })
     expect(reply.status).toHaveBeenCalledWith(200)
     expect(reply.send).toHaveBeenCalledWith([
@@ -46,6 +47,21 @@ describe('ListTodosController', () => {
     expect(listTodosUseCase.execute).toHaveBeenCalledWith({
       limit: undefined,
       offset: undefined,
+      done: false,
+    })
+  })
+
+  it('drops the filter when done is true', async () => {
+    const listTodosUseCase = { execute: vi.fn().mockResolvedValue([]) }
+    const controller = new ListTodosController(listTodosUseCase)
+    const reply = createReplyMock()
+
+    await controller.handle({ query: { done: true } } as never, reply)
+
+    expect(listTodosUseCase.execute).toHaveBeenCalledWith({
+      limit: undefined,
+      offset: undefined,
+      done: undefined,
     })
   })
 })
