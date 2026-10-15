@@ -45,6 +45,11 @@ export interface ListTodosRequest {
   offset: number;
 }
 
+export interface UpdateTodoRequest {
+  id: string;
+  name: string;
+}
+
 function createBaseTodo(): Todo {
   return { id: "", name: "", createdAt: "", done: false };
 }
@@ -452,6 +457,91 @@ export const ListTodosRequest: MessageFns<ListTodosRequest> = {
   },
 };
 
+function createBaseUpdateTodoRequest(): UpdateTodoRequest {
+  return { id: "", name: "" };
+}
+
+export const UpdateTodoRequest: MessageFns<UpdateTodoRequest> = {
+  encode(message: UpdateTodoRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UpdateTodoRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseUpdateTodoRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.id = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.name = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): UpdateTodoRequest {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+    };
+  },
+
+  toJSON(message: UpdateTodoRequest): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateTodoRequest>, I>>(base?: I): UpdateTodoRequest {
+    return UpdateTodoRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateTodoRequest>, I>>(object: I): UpdateTodoRequest {
+    const message = createBaseUpdateTodoRequest();
+    message.id = object.id ?? "";
+    message.name = object.name ?? "";
+    return message;
+  },
+};
+
 export type TodoServiceService = typeof TodoServiceService;
 export const TodoServiceService = {
   createTodo: {
@@ -481,12 +571,22 @@ export const TodoServiceService = {
     responseSerialize: (value: ListTodosResponse): Buffer => Buffer.from(ListTodosResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): ListTodosResponse => ListTodosResponse.decode(value),
   },
+  updateTodo: {
+    path: "/todo.v1.TodoService/UpdateTodo" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: UpdateTodoRequest): Buffer => Buffer.from(UpdateTodoRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): UpdateTodoRequest => UpdateTodoRequest.decode(value),
+    responseSerialize: (value: Todo): Buffer => Buffer.from(Todo.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Todo => Todo.decode(value),
+  },
 } as const;
 
 export interface TodoServiceServer extends UntypedServiceImplementation {
   createTodo: handleUnaryCall<CreateTodoRequest, Todo>;
   getTodoById: handleUnaryCall<GetTodoByIdRequest, Todo>;
   listTodos: handleUnaryCall<ListTodosRequest, ListTodosResponse>;
+  updateTodo: handleUnaryCall<UpdateTodoRequest, Todo>;
 }
 
 export interface TodoServiceClient extends Client {
@@ -534,6 +634,21 @@ export interface TodoServiceClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: ListTodosResponse) => void,
+  ): ClientUnaryCall;
+  updateTodo(
+    request: UpdateTodoRequest,
+    callback: (error: ServiceError | null, response: Todo) => void,
+  ): ClientUnaryCall;
+  updateTodo(
+    request: UpdateTodoRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Todo) => void,
+  ): ClientUnaryCall;
+  updateTodo(
+    request: UpdateTodoRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Todo) => void,
   ): ClientUnaryCall;
 }
 

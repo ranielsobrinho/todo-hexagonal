@@ -102,4 +102,22 @@ describe('grpc todo service', () => {
       ),
     ).rejects.toMatchObject({ code: status.INVALID_ARGUMENT })
   })
+
+  it('updates a todo by id', async () => {
+    const created = await unary<Todo>((callback) =>
+      client.createTodo({ name: 'original name' }, callback),
+    )
+
+    const updated = await unary<Todo>((callback) =>
+      client.updateTodo({ id: created.id, name: 'updated name' }, callback),
+    )
+
+    expect(updated).toMatchObject({ id: created.id, name: 'updated name' })
+
+    const found = await unary<Todo>((callback) =>
+      client.getTodoById({ id: created.id }, callback),
+    )
+
+    expect(found.name).toBe('updated name')
+  })
 })

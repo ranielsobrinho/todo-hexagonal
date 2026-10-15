@@ -265,6 +265,7 @@ The same use cases are exposed over gRPC through the contract in [`proto/todo.pr
 | `CreateTodo`  | `CreateTodoRequest`  | `Todo`              |
 | `GetTodoById` | `GetTodoByIdRequest` | `Todo`              |
 | `ListTodos`   | `ListTodosRequest`   | `ListTodosResponse` |
+| `UpdateTodo`  | `UpdateTodoRequest`  | `Todo`              |
 
 `ListTodosRequest` carries `limit` (1–100, default `50`) and `offset` (≥ 0, default `0`). In proto3 an omitted `int32` arrives as `0`, so the handler treats `0` as "not provided" and applies the defaults.
 
@@ -285,6 +286,11 @@ grpcurl -plaintext -proto proto/todo.proto \
 grpcurl -plaintext -proto proto/todo.proto \
   -d '{"limit":20,"offset":40}' \
   localhost:50051 todo.v1.TodoService/ListTodos
+
+# Update
+grpcurl -plaintext -proto proto/todo.proto \
+  -d '{"id":"<uuid>","name":"buy oat milk"}' \
+  localhost:50051 todo.v1.TodoService/UpdateTodo
 ```
 
 ### Error mapping

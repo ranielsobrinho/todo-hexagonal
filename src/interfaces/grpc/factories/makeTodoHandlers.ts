@@ -3,9 +3,11 @@ import { makeTodoRepository } from '../../http/factories/repositories/makeTodoRe
 import { makeCreateTodoUseCase } from '../../http/factories/usecases/makeCreateTodoUseCase.js'
 import { makeGetTodoByIdUseCase } from '../../http/factories/usecases/makeGetTodoByIdUseCase.js'
 import { makeListTodosUseCase } from '../../http/factories/usecases/makeListTodosUseCase.js'
+import { makeUpdateTodoUseCase } from '../../http/factories/usecases/makeUpdateTodoUseCase.js'
 import { CreateTodoHandler } from '../controllers/CreateTodoHandler.js'
 import { GetTodoByIdHandler } from '../controllers/GetTodoByIdHandler.js'
 import { ListTodosHandler } from '../controllers/ListTodosHandler.js'
+import { UpdateTodoHandler } from '../controllers/UpdateTodoHandler.js'
 import type { TodoServiceDependencies } from '../routes/todoService.js'
 
 export function makeTodoHandlers(
@@ -17,5 +19,6 @@ export function makeTodoHandlers(
       makeGetTodoByIdUseCase(repository),
     ),
     listTodosHandler: new ListTodosHandler(makeListTodosUseCase(repository)),
+    updateTodoHandler: new UpdateTodoHandler(makeUpdateTodoUseCase(repository)),
   }
 }
