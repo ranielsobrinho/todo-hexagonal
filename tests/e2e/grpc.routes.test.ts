@@ -12,6 +12,7 @@ import {
   TodoServiceClient,
   type Todo,
 } from '../../src/interfaces/grpc/generated/proto/todo.js'
+import type { Empty } from '../../src/interfaces/grpc/generated/google/protobuf/empty.js'
 import { buildGrpcServer } from '../../src/interfaces/grpc/server.js'
 import { FakeTodoRepository } from '../support/fake-todo-repository.js'
 
@@ -119,5 +120,21 @@ describe('grpc todo service', () => {
     )
 
     expect(found.name).toBe('updated name')
+  })
+
+  it('deletes a todo and then reports NOT_FOUND', async () => {
+    const created = await unary<Todo>((callback) =>
+      client.createTodo({ name: 'to be deleted' }, callback),
+    )
+
+    const deleted = await unary<Empty>((callback) =>
+      client.deleteTodo({ id: created.id }, callback),
+    )
+
+    expect(deleted).toEqual({})
+
+    await expect(
+      unary((callback) => client.getTodoById({ id: created.id }, callback)),
+    ).rejects.toMatchObject({ code: status.NOT_FOUND })
   })
 })

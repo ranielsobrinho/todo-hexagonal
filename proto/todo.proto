@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package todo.v1;
 
+import "google/protobuf/empty.proto";
+
 message Todo {
   string id = 1;
   string name = 2;
@@ -20,10 +22,12 @@ message UpdateTodoRequest {
   string id = 1;
   string name = 2;
 }
+message DeleteTodoRequest { string id = 1; }
 
 service TodoService {
   rpc CreateTodo (CreateTodoRequest) returns (Todo);
   rpc GetTodoById (GetTodoByIdRequest) returns (Todo);
   rpc ListTodos (ListTodosRequest) returns (ListTodosResponse);
   rpc UpdateTodo (UpdateTodoRequest) returns (Todo);
+  rpc DeleteTodo (DeleteTodoRequest) returns (google.protobuf.Empty);
 }
