@@ -11,6 +11,8 @@ import { ListTodosHandler } from '../controllers/ListTodosHandler.js'
 import { UpdateTodoHandler } from '../controllers/UpdateTodoHandler.js'
 import { DeleteTodoHandler } from '../controllers/DeleteTodoHandler.js'
 import type { TodoServiceDependencies } from '../routes/todoService.js'
+import { FinishTodoHandler } from '../controllers/FinishTodoHandler.js'
+import { makeFinishTodoUseCase } from '../../http/factories/usecases/makeFinishTodoUseCase.js'
 
 export function makeTodoHandlers(
   repository: TodoRepository = makeTodoRepository(),
@@ -23,5 +25,6 @@ export function makeTodoHandlers(
     listTodosHandler: new ListTodosHandler(makeListTodosUseCase(repository)),
     updateTodoHandler: new UpdateTodoHandler(makeUpdateTodoUseCase(repository)),
     deleteTodoHandler: new DeleteTodoHandler(makeDeleteTodoUseCase(repository)),
+    finishTodoHandler: new FinishTodoHandler(makeFinishTodoUseCase(repository)),
   }
 }

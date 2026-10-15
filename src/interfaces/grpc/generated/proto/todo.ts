@@ -55,6 +55,10 @@ export interface DeleteTodoRequest {
   id: string;
 }
 
+export interface FinishTodoRequest {
+  id: string;
+}
+
 function createBaseTodo(): Todo {
   return { id: "", name: "", createdAt: "", done: false };
 }
@@ -614,6 +618,73 @@ export const DeleteTodoRequest: MessageFns<DeleteTodoRequest> = {
   },
 };
 
+function createBaseFinishTodoRequest(): FinishTodoRequest {
+  return { id: "" };
+}
+
+export const FinishTodoRequest: MessageFns<FinishTodoRequest> = {
+  encode(message: FinishTodoRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FinishTodoRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseFinishTodoRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.id = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): FinishTodoRequest {
+    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+  },
+
+  toJSON(message: FinishTodoRequest): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FinishTodoRequest>, I>>(base?: I): FinishTodoRequest {
+    return FinishTodoRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<FinishTodoRequest>, I>>(object: I): FinishTodoRequest {
+    const message = createBaseFinishTodoRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
 export type TodoServiceService = typeof TodoServiceService;
 export const TodoServiceService = {
   createTodo: {
@@ -661,6 +732,15 @@ export const TodoServiceService = {
     responseSerialize: (value: Empty): Buffer => Buffer.from(Empty.encode(value).finish()),
     responseDeserialize: (value: Buffer): Empty => Empty.decode(value),
   },
+  finishTodo: {
+    path: "/todo.v1.TodoService/FinishTodo" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FinishTodoRequest): Buffer => Buffer.from(FinishTodoRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FinishTodoRequest => FinishTodoRequest.decode(value),
+    responseSerialize: (value: Empty): Buffer => Buffer.from(Empty.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Empty => Empty.decode(value),
+  },
 } as const;
 
 export interface TodoServiceServer extends UntypedServiceImplementation {
@@ -669,6 +749,7 @@ export interface TodoServiceServer extends UntypedServiceImplementation {
   listTodos: handleUnaryCall<ListTodosRequest, ListTodosResponse>;
   updateTodo: handleUnaryCall<UpdateTodoRequest, Todo>;
   deleteTodo: handleUnaryCall<DeleteTodoRequest, Empty>;
+  finishTodo: handleUnaryCall<FinishTodoRequest, Empty>;
 }
 
 export interface TodoServiceClient extends Client {
@@ -743,6 +824,21 @@ export interface TodoServiceClient extends Client {
   ): ClientUnaryCall;
   deleteTodo(
     request: DeleteTodoRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  finishTodo(
+    request: FinishTodoRequest,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  finishTodo(
+    request: FinishTodoRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  finishTodo(
+    request: FinishTodoRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: Empty) => void,

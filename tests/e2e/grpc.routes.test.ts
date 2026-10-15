@@ -137,4 +137,25 @@ describe('grpc todo service', () => {
       unary((callback) => client.getTodoById({ id: created.id }, callback)),
     ).rejects.toMatchObject({ code: status.NOT_FOUND })
   })
+
+  it('finishes a todo and then reports NOT_FOUND', async () => {
+    const created = await unary<Todo>((callback) =>
+      client.createTodo({ name: 'to be finished' }, callback),
+    )
+
+    const finished = await unary<Empty>((callback) =>
+      client.finishTodo({ id: created.id }, callback),
+    )
+
+    expect(finished).toEqual({})
+
+    const found = await unary<Todo>((callback) =>
+      client.getTodoById({ id: created.id }, callback),
+    )
+    expect(found.done).toBe(true)
+
+    await expect(
+      unary((callback) => client.finishTodo({ id: randomUUID() }, callback)),
+    ).rejects.toMatchObject({ code: status.NOT_FOUND })
+  })
 })

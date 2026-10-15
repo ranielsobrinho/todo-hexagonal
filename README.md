@@ -267,10 +267,11 @@ The same use cases are exposed over gRPC through the contract in [`proto/todo.pr
 | `ListTodos`   | `ListTodosRequest`   | `ListTodosResponse`     |
 | `UpdateTodo`  | `UpdateTodoRequest`  | `Todo`                  |
 | `DeleteTodo`  | `DeleteTodoRequest`  | `google.protobuf.Empty` |
+| `FinishTodo`  | `FinishTodoRequest`  | `google.protobuf.Empty` |
 
 `ListTodosRequest` carries `limit` (1–100, default `50`) and `offset` (≥ 0, default `0`). In proto3 an omitted `int32` arrives as `0`, so the handler treats `0` as "not provided" and applies the defaults.
 
-`DeleteTodo` mirrors the HTTP `204 No Content`: it responds with an empty message (`google.protobuf.Empty`).
+`DeleteTodo` and `FinishTodo` mirror the HTTP `204 No Content`: both respond with an empty message (`google.protobuf.Empty`).
 
 ### Examples (grpcurl)
 
@@ -299,6 +300,11 @@ grpcurl -plaintext -proto proto/todo.proto \
 grpcurl -plaintext -proto proto/todo.proto \
   -d '{"id":"<uuid>"}' \
   localhost:50051 todo.v1.TodoService/DeleteTodo
+
+# Finish
+grpcurl -plaintext -proto proto/todo.proto \
+  -d '{"id":"<uuid>"}' \
+  localhost:50051 todo.v1.TodoService/FinishTodo
 ```
 
 ### Error mapping

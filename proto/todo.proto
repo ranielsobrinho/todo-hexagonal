@@ -23,6 +23,7 @@ message UpdateTodoRequest {
   string name = 2;
 }
 message DeleteTodoRequest { string id = 1; }
+message FinishTodoRequest { string id = 1; }
 
 service TodoService {
   rpc CreateTodo (CreateTodoRequest) returns (Todo);
@@ -30,4 +31,5 @@ service TodoService {
   rpc ListTodos (ListTodosRequest) returns (ListTodosResponse);
   rpc UpdateTodo (UpdateTodoRequest) returns (Todo);
   rpc DeleteTodo (DeleteTodoRequest) returns (google.protobuf.Empty);
+  rpc FinishTodo (FinishTodoRequest) returns (google.protobuf.Empty);
 }
