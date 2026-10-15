@@ -142,6 +142,182 @@ describe('todos routes', () => {
     expect(response.statusCode).toBe(400)
   })
 
+  it('PUT /todos/:id renames the todo', async () => {
+    const created = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'buy milk' },
+    })
+    const { id } = created.json()
+
+    const response = await app.inject({
+      method: 'PUT',
+      url: `${API_PREFIX}/todos/${id}`,
+      payload: { name: 'renamed' },
+    })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.json()).toMatchObject({ id, name: 'renamed' })
+  })
+
+  it('PUT /todos/:id returns 400 when name is missing', async () => {
+    const created = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'buy milk' },
+    })
+    const { id } = created.json()
+
+    const response = await app.inject({
+      method: 'PUT',
+      url: `${API_PREFIX}/todos/${id}`,
+      payload: {},
+    })
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  it('PUT /todos/:id returns 400 for a non-uuid id', async () => {
+    const response = await app.inject({
+      method: 'PUT',
+      url: `${API_PREFIX}/todos/not-a-uuid`,
+      payload: { name: 'renamed' },
+    })
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  it('PUT /todos/:id returns 404 for an unknown id', async () => {
+    const response = await app.inject({
+      method: 'PUT',
+      url: `${API_PREFIX}/todos/${randomUUID()}`,
+      payload: { name: 'renamed' },
+    })
+
+    expect(response.statusCode).toBe(404)
+  })
+
+  it('DELETE /todos/:id removes the todo', async () => {
+    const created = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'buy milk' },
+    })
+    const { id } = created.json()
+
+    const deleted = await app.inject({
+      method: 'DELETE',
+      url: `${API_PREFIX}/todos/${id}`,
+    })
+    expect(deleted.statusCode).toBe(204)
+
+    const response = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos/${id}`,
+    })
+    expect(response.statusCode).toBe(404)
+  })
+
+  it('DELETE /todos/:id returns 404 for an unknown id', async () => {
+    const response = await app.inject({
+      method: 'DELETE',
+      url: `${API_PREFIX}/todos/${randomUUID()}`,
+    })
+
+    expect(response.statusCode).toBe(404)
+  })
+
+  it('PATCH /todos/:id/finish marks the todo as done', async () => {
+    const created = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'buy milk' },
+    })
+    const { id } = created.json()
+
+    const finished = await app.inject({
+      method: 'PATCH',
+      url: `${API_PREFIX}/todos/${id}/finish`,
+    })
+    expect(finished.statusCode).toBe(204)
+
+    const response = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos/${id}`,
+    })
+    expect(response.json()).toMatchObject({ id, done: true })
+  })
+
+  it('PATCH /todos/:id/finish returns 404 for an unknown id', async () => {
+    const response = await app.inject({
+      method: 'PATCH',
+      url: `${API_PREFIX}/todos/${randomUUID()}/finish`,
+    })
+
+    expect(response.statusCode).toBe(404)
+  })
+
+  it('GET /todos lists only pending todos by default', async () => {
+    const first = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'pending' },
+    })
+    const second = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'finished' },
+    })
+    await app.inject({
+      method: 'PATCH',
+      url: `${API_PREFIX}/todos/${second.json().id}/finish`,
+    })
+
+    const response = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos`,
+    })
+
+    expect(response.statusCode).toBe(200)
+    const body = response.json()
+    expect(body).toHaveLength(1)
+    expect(body[0]).toMatchObject({ id: first.json().id, done: false })
+  })
+
+  it('GET /todos?done=true lists pending and finished todos', async () => {
+    await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'pending' },
+    })
+    const finished = await app.inject({
+      method: 'POST',
+      url: `${API_PREFIX}/todos`,
+      payload: { name: 'finished' },
+    })
+    await app.inject({
+      method: 'PATCH',
+      url: `${API_PREFIX}/todos/${finished.json().id}/finish`,
+    })
+
+    const response = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos?done=true`,
+    })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.json()).toHaveLength(2)
+  })
+
+  it('GET /todos returns 400 for a non-boolean done', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `${API_PREFIX}/todos?done=notabool`,
+    })
+
+    expect(response.statusCode).toBe(400)
+  })
+
   it('is not served without the version prefix', async () => {
     const response = await app.inject({ method: 'GET', url: '/todos' })
     expect(response.statusCode).toBe(404)

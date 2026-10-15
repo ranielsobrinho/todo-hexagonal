@@ -56,11 +56,61 @@ export class PgTodoRepository implements TodoRepository {
     const limit = params.limit ?? DEFAULT_LIST_LIMIT
     const offset = params.offset ?? DEFAULT_LIST_OFFSET
 
+    const values: Array<number | boolean> = [limit, offset]
+    let whereClause = ''
+    if (params.done !== undefined) {
+      values.push(params.done)
+      whereClause = `WHERE done = $${values.length}`
+    }
+
     const { rows } = await this.db.query<TodoRow>(
-      `SELECT id, name, created_at, done FROM todos ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
-      [limit, offset],
+      `SELECT id, name, created_at, done FROM todos ${whereClause} ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+      values,
     )
 
     return rows.map(toTodo)
+  }
+
+  async delete(id: string): Promise<void> {
+    const { rowCount } = await this.db.query(
+      `DELETE FROM todos WHERE id = $1`,
+      [id],
+    )
+    if (!rowCount) {
+      throw new ApplicationError(
+        `Todo with id ${id} was not found`,
+        'NOT_FOUND',
+      )
+    }
+  }
+
+  async finish(id: string): Promise<void> {
+    const { rowCount } = await this.db.query(
+      `UPDATE todos SET done = true WHERE id = $1`,
+      [id],
+    )
+    if (!rowCount) {
+      throw new ApplicationError(
+        `Todo with id ${id} was not found`,
+        'NOT_FOUND',
+      )
+    }
+  }
+
+  async update(id: string, params: TodoParam): Promise<Todo> {
+    const { name } = params
+    const { rows } = await this.db.query<TodoRow>(
+      `UPDATE todos SET name = $1 WHERE id = $2 RETURNING id, name, created_at, done`,
+      [name, id],
+    )
+
+    if (!rows[0]) {
+      throw new ApplicationError(
+        `Todo with id ${id} was not found`,
+        'NOT_FOUND',
+      )
+    }
+
+    return toTodo(rows[0])
   }
 }

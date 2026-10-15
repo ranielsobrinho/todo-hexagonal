@@ -37,7 +37,30 @@ export class FakeTodoRepository implements TodoRepository {
     const offset = params.offset ?? 0
 
     return [...this.todos.values()]
+      .filter((todo) => params.done === undefined || todo.done === params.done)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(offset, offset + limit)
+  }
+
+  async update(id: string, params: TodoParam): Promise<Todo> {
+    const todo = await this.getById(id)
+    todo.name = params.name
+    this.todos.set(id, todo)
+    return todo
+  }
+
+  async delete(id: string): Promise<void> {
+    if (!this.todos.delete(id)) {
+      throw new ApplicationError(
+        `Todo with id ${id} was not found`,
+        'NOT_FOUND',
+      )
+    }
+  }
+
+  async finish(id: string): Promise<void> {
+    const todo = await this.getById(id)
+    todo.done = true
+    this.todos.set(id, todo)
   }
 }

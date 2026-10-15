@@ -18,6 +18,7 @@ import {
   type ServiceError,
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
+import { Empty } from "../google/protobuf/empty.js";
 
 export const protobufPackage = "todo.v1";
 
@@ -43,6 +44,19 @@ export interface GetTodoByIdRequest {
 export interface ListTodosRequest {
   limit: number;
   offset: number;
+}
+
+export interface UpdateTodoRequest {
+  id: string;
+  name: string;
+}
+
+export interface DeleteTodoRequest {
+  id: string;
+}
+
+export interface FinishTodoRequest {
+  id: string;
 }
 
 function createBaseTodo(): Todo {
@@ -452,6 +466,225 @@ export const ListTodosRequest: MessageFns<ListTodosRequest> = {
   },
 };
 
+function createBaseUpdateTodoRequest(): UpdateTodoRequest {
+  return { id: "", name: "" };
+}
+
+export const UpdateTodoRequest: MessageFns<UpdateTodoRequest> = {
+  encode(message: UpdateTodoRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UpdateTodoRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseUpdateTodoRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.id = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.name = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): UpdateTodoRequest {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+    };
+  },
+
+  toJSON(message: UpdateTodoRequest): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateTodoRequest>, I>>(base?: I): UpdateTodoRequest {
+    return UpdateTodoRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateTodoRequest>, I>>(object: I): UpdateTodoRequest {
+    const message = createBaseUpdateTodoRequest();
+    message.id = object.id ?? "";
+    message.name = object.name ?? "";
+    return message;
+  },
+};
+
+function createBaseDeleteTodoRequest(): DeleteTodoRequest {
+  return { id: "" };
+}
+
+export const DeleteTodoRequest: MessageFns<DeleteTodoRequest> = {
+  encode(message: DeleteTodoRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): DeleteTodoRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseDeleteTodoRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.id = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): DeleteTodoRequest {
+    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+  },
+
+  toJSON(message: DeleteTodoRequest): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteTodoRequest>, I>>(base?: I): DeleteTodoRequest {
+    return DeleteTodoRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteTodoRequest>, I>>(object: I): DeleteTodoRequest {
+    const message = createBaseDeleteTodoRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseFinishTodoRequest(): FinishTodoRequest {
+  return { id: "" };
+}
+
+export const FinishTodoRequest: MessageFns<FinishTodoRequest> = {
+  encode(message: FinishTodoRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FinishTodoRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseFinishTodoRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.id = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): FinishTodoRequest {
+    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+  },
+
+  toJSON(message: FinishTodoRequest): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FinishTodoRequest>, I>>(base?: I): FinishTodoRequest {
+    return FinishTodoRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<FinishTodoRequest>, I>>(object: I): FinishTodoRequest {
+    const message = createBaseFinishTodoRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
 export type TodoServiceService = typeof TodoServiceService;
 export const TodoServiceService = {
   createTodo: {
@@ -481,12 +714,42 @@ export const TodoServiceService = {
     responseSerialize: (value: ListTodosResponse): Buffer => Buffer.from(ListTodosResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): ListTodosResponse => ListTodosResponse.decode(value),
   },
+  updateTodo: {
+    path: "/todo.v1.TodoService/UpdateTodo" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: UpdateTodoRequest): Buffer => Buffer.from(UpdateTodoRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): UpdateTodoRequest => UpdateTodoRequest.decode(value),
+    responseSerialize: (value: Todo): Buffer => Buffer.from(Todo.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Todo => Todo.decode(value),
+  },
+  deleteTodo: {
+    path: "/todo.v1.TodoService/DeleteTodo" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: DeleteTodoRequest): Buffer => Buffer.from(DeleteTodoRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): DeleteTodoRequest => DeleteTodoRequest.decode(value),
+    responseSerialize: (value: Empty): Buffer => Buffer.from(Empty.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Empty => Empty.decode(value),
+  },
+  finishTodo: {
+    path: "/todo.v1.TodoService/FinishTodo" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: FinishTodoRequest): Buffer => Buffer.from(FinishTodoRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): FinishTodoRequest => FinishTodoRequest.decode(value),
+    responseSerialize: (value: Empty): Buffer => Buffer.from(Empty.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Empty => Empty.decode(value),
+  },
 } as const;
 
 export interface TodoServiceServer extends UntypedServiceImplementation {
   createTodo: handleUnaryCall<CreateTodoRequest, Todo>;
   getTodoById: handleUnaryCall<GetTodoByIdRequest, Todo>;
   listTodos: handleUnaryCall<ListTodosRequest, ListTodosResponse>;
+  updateTodo: handleUnaryCall<UpdateTodoRequest, Todo>;
+  deleteTodo: handleUnaryCall<DeleteTodoRequest, Empty>;
+  finishTodo: handleUnaryCall<FinishTodoRequest, Empty>;
 }
 
 export interface TodoServiceClient extends Client {
@@ -534,6 +797,51 @@ export interface TodoServiceClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: ListTodosResponse) => void,
+  ): ClientUnaryCall;
+  updateTodo(
+    request: UpdateTodoRequest,
+    callback: (error: ServiceError | null, response: Todo) => void,
+  ): ClientUnaryCall;
+  updateTodo(
+    request: UpdateTodoRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Todo) => void,
+  ): ClientUnaryCall;
+  updateTodo(
+    request: UpdateTodoRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Todo) => void,
+  ): ClientUnaryCall;
+  deleteTodo(
+    request: DeleteTodoRequest,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  deleteTodo(
+    request: DeleteTodoRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  deleteTodo(
+    request: DeleteTodoRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  finishTodo(
+    request: FinishTodoRequest,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  finishTodo(
+    request: FinishTodoRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Empty) => void,
+  ): ClientUnaryCall;
+  finishTodo(
+    request: FinishTodoRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Empty) => void,
   ): ClientUnaryCall;
 }
 

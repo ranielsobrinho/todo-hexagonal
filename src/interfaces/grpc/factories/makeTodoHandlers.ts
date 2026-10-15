@@ -3,10 +3,16 @@ import { makeTodoRepository } from '../../http/factories/repositories/makeTodoRe
 import { makeCreateTodoUseCase } from '../../http/factories/usecases/makeCreateTodoUseCase.js'
 import { makeGetTodoByIdUseCase } from '../../http/factories/usecases/makeGetTodoByIdUseCase.js'
 import { makeListTodosUseCase } from '../../http/factories/usecases/makeListTodosUseCase.js'
+import { makeUpdateTodoUseCase } from '../../http/factories/usecases/makeUpdateTodoUseCase.js'
+import { makeDeleteTodoUseCase } from '../../http/factories/usecases/makeDeleteTodoUseCase.js'
 import { CreateTodoHandler } from '../controllers/CreateTodoHandler.js'
 import { GetTodoByIdHandler } from '../controllers/GetTodoByIdHandler.js'
 import { ListTodosHandler } from '../controllers/ListTodosHandler.js'
+import { UpdateTodoHandler } from '../controllers/UpdateTodoHandler.js'
+import { DeleteTodoHandler } from '../controllers/DeleteTodoHandler.js'
 import type { TodoServiceDependencies } from '../routes/todoService.js'
+import { FinishTodoHandler } from '../controllers/FinishTodoHandler.js'
+import { makeFinishTodoUseCase } from '../../http/factories/usecases/makeFinishTodoUseCase.js'
 
 export function makeTodoHandlers(
   repository: TodoRepository = makeTodoRepository(),
@@ -17,5 +23,8 @@ export function makeTodoHandlers(
       makeGetTodoByIdUseCase(repository),
     ),
     listTodosHandler: new ListTodosHandler(makeListTodosUseCase(repository)),
+    updateTodoHandler: new UpdateTodoHandler(makeUpdateTodoUseCase(repository)),
+    deleteTodoHandler: new DeleteTodoHandler(makeDeleteTodoUseCase(repository)),
+    finishTodoHandler: new FinishTodoHandler(makeFinishTodoUseCase(repository)),
   }
 }

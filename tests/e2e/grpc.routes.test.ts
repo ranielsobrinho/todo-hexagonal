@@ -12,6 +12,7 @@ import {
   TodoServiceClient,
   type Todo,
 } from '../../src/interfaces/grpc/generated/proto/todo.js'
+import type { Empty } from '../../src/interfaces/grpc/generated/google/protobuf/empty.js'
 import { buildGrpcServer } from '../../src/interfaces/grpc/server.js'
 import { FakeTodoRepository } from '../support/fake-todo-repository.js'
 
@@ -101,5 +102,60 @@ describe('grpc todo service', () => {
         client.listTodos({ limit: 200, offset: 0 }, callback),
       ),
     ).rejects.toMatchObject({ code: status.INVALID_ARGUMENT })
+  })
+
+  it('updates a todo by id', async () => {
+    const created = await unary<Todo>((callback) =>
+      client.createTodo({ name: 'original name' }, callback),
+    )
+
+    const updated = await unary<Todo>((callback) =>
+      client.updateTodo({ id: created.id, name: 'updated name' }, callback),
+    )
+
+    expect(updated).toMatchObject({ id: created.id, name: 'updated name' })
+
+    const found = await unary<Todo>((callback) =>
+      client.getTodoById({ id: created.id }, callback),
+    )
+
+    expect(found.name).toBe('updated name')
+  })
+
+  it('deletes a todo and then reports NOT_FOUND', async () => {
+    const created = await unary<Todo>((callback) =>
+      client.createTodo({ name: 'to be deleted' }, callback),
+    )
+
+    const deleted = await unary<Empty>((callback) =>
+      client.deleteTodo({ id: created.id }, callback),
+    )
+
+    expect(deleted).toEqual({})
+
+    await expect(
+      unary((callback) => client.getTodoById({ id: created.id }, callback)),
+    ).rejects.toMatchObject({ code: status.NOT_FOUND })
+  })
+
+  it('finishes a todo and then reports NOT_FOUND', async () => {
+    const created = await unary<Todo>((callback) =>
+      client.createTodo({ name: 'to be finished' }, callback),
+    )
+
+    const finished = await unary<Empty>((callback) =>
+      client.finishTodo({ id: created.id }, callback),
+    )
+
+    expect(finished).toEqual({})
+
+    const found = await unary<Todo>((callback) =>
+      client.getTodoById({ id: created.id }, callback),
+    )
+    expect(found.done).toBe(true)
+
+    await expect(
+      unary((callback) => client.finishTodo({ id: randomUUID() }, callback)),
+    ).rejects.toMatchObject({ code: status.NOT_FOUND })
   })
 })
