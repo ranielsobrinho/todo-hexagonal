@@ -47,6 +47,7 @@ Hexagonal Architecture organizes code so that **dependencies always point inward
             ┌───────────────────────────────────────────────┐
             │                 Use cases                     │  application rules
             │  CreateTodo · GetTodoById · ListTodos         │
+            │  UpdateTodo · DeleteTodo · FinishTodo         │
             └───────────────────────┬───────────────────────┘
                                     │ depends on
                                     ▼
@@ -91,14 +92,20 @@ src/
 │   ├── contracts/todo/                  # Inbound contracts
 │   │   ├── CreateTodoContract.ts
 │   │   ├── GetTodoByIdContract.ts
-│   │   └── ListTodosContract.ts
+│   │   ├── ListTodosContract.ts
+│   │   ├── UpdateTodoContract.ts
+│   │   ├── DeleteTodoContract.ts
+│   │   └── FinishTodoContract.ts
 │   ├── entities/Todo.ts                 # Todo entity + invariants
 │   ├── errors/ApplicationError.ts       # Error type carrying a domain code
 │   └── repositories/ITodoRepository.ts  # Repository port
 ├── usecases/todo/                       # Application rules
 │   ├── CreateTodoUseCase.ts
 │   ├── GetTodoByIdUseCase.ts
-│   └── ListTodosUseCase.ts
+│   ├── ListTodosUseCase.ts
+│   ├── UpdateTodoUseCase.ts
+│   ├── DeleteTodoUseCase.ts
+│   └── FinishTodoUseCase.ts
 ├── interfaces/                          # Driving adapters
 │   ├── controllers/                     # HTTP controllers
 │   ├── presenters/TodoPresenter.ts      # Entity → DTO mapping
@@ -107,7 +114,7 @@ src/
 │   │   ├── routes/                       # apiRoutes, todoRoutes, healthRoutes
 │   │   └── server.ts                    # buildServer(dependencies)
 │   └── grpc/
-│       ├── controllers/                 # gRPC handlers (CreateTodo, …)
+│       ├── controllers/                 # gRPC handlers, one per RPC
 │       ├── errors/grpcErrorMapper.ts    # Maps domain errors → gRPC status
 │       ├── factories/makeTodoHandlers.ts
 │       ├── routes/todoService.ts        # Binds handlers to the service
@@ -122,7 +129,8 @@ tests/
 ├── e2e/                                 # Full flows (HTTP via app.inject(), gRPC via a real server)
 │   ├── todos.routes.test.ts
 │   ├── grpc.routes.test.ts
-│   └── health.routes.test.ts
+│   ├── health.routes.test.ts
+│   └── security.routes.test.ts
 ├── unit/
 │   ├── controllers/
 │   ├── grpc/
@@ -160,7 +168,7 @@ pnpm dev
 
 The HTTP server starts on `PORT` (defaults to `3000`; this project ships `.env` with `5000`) and the gRPC server on `GRPC_PORT` (default `50051`).
 
-The generated gRPC code lives in `src/interfaces/grpc/generated` (gitignored) and is produced by `pnpm proto:generate`. Re-run it after editing `proto/todo.proto` (`pnpm build` and `pnpm install` do it for you).
+The generated gRPC code lives in `src/interfaces/grpc/generated` and is produced by `pnpm proto:generate`. Re-run it after editing `proto/todo.proto` (`pnpm build` and `pnpm install` do it for you).
 
 ### Environment variables
 
@@ -207,16 +215,19 @@ docker run --rm -p 3000:3000 -p 50051:50051 --env-file=.env todo-hexagonal
 
 All application routes are versioned under `/api/v1`. Health check lives at the root.
 
-| Method | Endpoint            | Description               | Success | Errors              |
-| ------ | ------------------- | ------------------------- | ------- | ------------------- |
-| `POST` | `/api/v1/todos`     | Create a todo             | `201`   | `400`, `429`        |
-| `GET`  | `/api/v1/todos`     | List todos (newest first) | `200`   | `400`, `429`        |
-| `GET`  | `/api/v1/todos/:id` | Get a todo by id (UUID)   | `200`   | `400`, `404`, `429` |
-| `GET`  | `/health`           | Liveness + DB check       | `200`   | `503`, `429`        |
+| Method   | Endpoint                   | Description               | Success | Errors              |
+| -------- | -------------------------- | ------------------------- | ------- | ------------------- |
+| `POST`   | `/api/v1/todos`            | Create a todo             | `201`   | `400`, `429`        |
+| `GET`    | `/api/v1/todos`            | List todos (newest first) | `200`   | `400`, `429`        |
+| `GET`    | `/api/v1/todos/:id`        | Get a todo by id (UUID)   | `200`   | `400`, `404`, `429` |
+| `PUT`    | `/api/v1/todos/:id`        | Update a todo             | `200`   | `400`, `404`, `429` |
+| `DELETE` | `/api/v1/todos/:id`        | Delete a todo             | `204`   | `400`, `404`, `429` |
+| `PATCH`  | `/api/v1/todos/:id/finish` | Mark a todo as done       | `204`   | `400`, `404`, `429` |
+| `GET`    | `/health`                  | Liveness + DB check       | `200`   | `503`, `429`        |
 
 ### Pagination
 
-`GET /api/v1/todos` accepts `limit` (1–100, default `50`) and `offset` (≥ 0, default `0`). The response is a bounded array.
+`GET /api/v1/todos` accepts `limit` (1–100, default `50`), `offset` (≥ 0, default `0`) and `done` (boolean filter). The response is a bounded array.
 
 ### Examples
 
@@ -235,6 +246,20 @@ curl "http://localhost:5000/api/v1/todos?limit=20&offset=40"
 
 # Get by id
 curl http://localhost:5000/api/v1/todos/<uuid>
+
+# Update
+curl -X PUT http://localhost:5000/api/v1/todos/<uuid> \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"buy oat milk"}'
+# → 200 {"id":"...","name":"buy oat milk","createdAt":"...","done":false}
+
+# Finish
+curl -X PATCH http://localhost:5000/api/v1/todos/<uuid>/finish
+# → 204
+
+# Delete
+curl -X DELETE http://localhost:5000/api/v1/todos/<uuid>
+# → 204
 
 # Health
 curl http://localhost:5000/health
@@ -329,7 +354,7 @@ When **both** `GRPC_TLS_CERT` and `GRPC_TLS_KEY` are set, the server loads the c
 Defense in depth at the HTTP, validation and database layers:
 
 - **Security headers** — [`@fastify/helmet`](https://github.com/fastify/fastify-helmet) sets CSP, HSTS, `X-Content-Type-Options`, `X-Frame-Options` and more.
-- **Rate limiting** — [`@fastify/rate-limit`](https://github.com/fastify/fastify-rate-limit) applies a global `100 req/min` per IP limit; `POST /api/v1/todos` is stricter (`20 req/min`). Exceeding it returns `429`.
+- **Rate limiting** — [`@fastify/rate-limit`](https://github.com/fastify/fastify-rate-limit) applies a global `100 req/min` per IP limit; `POST` and `DELETE /api/v1/todos/:id` are stricter (`20 req/min`) and `PUT` / `PATCH /api/v1/todos/:id/finish` allow `40 req/min`. Exceeding it returns `429`.
 - **Request limits** — 100 KB body limit plus `connectionTimeout` (10s), `requestTimeout` (15s) and `keepAliveTimeout` (72s) to mitigate slowloris and slow-body attacks.
 - **Strict input validation** — JSON schemas reject unknown properties, `:id` must be a UUID, `name` is capped at 255 chars and list queries are bounded.
 - **Parameterized SQL** — every query uses `$1` placeholders, so there is no SQL-injection surface.
