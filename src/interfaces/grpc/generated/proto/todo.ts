@@ -10,8 +10,10 @@ import {
   type CallOptions,
   type ChannelCredentials,
   Client,
+  type ClientDuplexStream,
   type ClientOptions,
   type ClientUnaryCall,
+  type handleBidiStreamingCall,
   type handleUnaryCall,
   makeGenericClientConstructor,
   type Metadata,
@@ -57,6 +59,11 @@ export interface DeleteTodoRequest {
 
 export interface FinishTodoRequest {
   id: string;
+}
+
+export interface FailedTodo {
+  name: string;
+  reason: string;
 }
 
 function createBaseTodo(): Todo {
@@ -685,6 +692,91 @@ export const FinishTodoRequest: MessageFns<FinishTodoRequest> = {
   },
 };
 
+function createBaseFailedTodo(): FailedTodo {
+  return { name: "", reason: "" };
+}
+
+export const FailedTodo: MessageFns<FailedTodo> = {
+  encode(message: FailedTodo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.reason !== "") {
+      writer.uint32(18).string(message.reason);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FailedTodo {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseFailedTodo();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.name = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.reason = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): FailedTodo {
+    return {
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      reason: isSet(object.reason) ? globalThis.String(object.reason) : "",
+    };
+  },
+
+  toJSON(message: FailedTodo): unknown {
+    const obj: any = {};
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FailedTodo>, I>>(base?: I): FailedTodo {
+    return FailedTodo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<FailedTodo>, I>>(object: I): FailedTodo {
+    const message = createBaseFailedTodo();
+    message.name = object.name ?? "";
+    message.reason = object.reason ?? "";
+    return message;
+  },
+};
+
 export type TodoServiceService = typeof TodoServiceService;
 export const TodoServiceService = {
   createTodo: {
@@ -741,6 +833,15 @@ export const TodoServiceService = {
     responseSerialize: (value: Empty): Buffer => Buffer.from(Empty.encode(value).finish()),
     responseDeserialize: (value: Buffer): Empty => Empty.decode(value),
   },
+  createTodosStream: {
+    path: "/todo.v1.TodoService/CreateTodosStream" as const,
+    requestStream: true as const,
+    responseStream: true as const,
+    requestSerialize: (value: CreateTodoRequest): Buffer => Buffer.from(CreateTodoRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreateTodoRequest => CreateTodoRequest.decode(value),
+    responseSerialize: (value: FailedTodo): Buffer => Buffer.from(FailedTodo.encode(value).finish()),
+    responseDeserialize: (value: Buffer): FailedTodo => FailedTodo.decode(value),
+  },
 } as const;
 
 export interface TodoServiceServer extends UntypedServiceImplementation {
@@ -750,6 +851,7 @@ export interface TodoServiceServer extends UntypedServiceImplementation {
   updateTodo: handleUnaryCall<UpdateTodoRequest, Todo>;
   deleteTodo: handleUnaryCall<DeleteTodoRequest, Empty>;
   finishTodo: handleUnaryCall<FinishTodoRequest, Empty>;
+  createTodosStream: handleBidiStreamingCall<CreateTodoRequest, FailedTodo>;
 }
 
 export interface TodoServiceClient extends Client {
@@ -843,6 +945,12 @@ export interface TodoServiceClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: Empty) => void,
   ): ClientUnaryCall;
+  createTodosStream(): ClientDuplexStream<CreateTodoRequest, FailedTodo>;
+  createTodosStream(options: Partial<CallOptions>): ClientDuplexStream<CreateTodoRequest, FailedTodo>;
+  createTodosStream(
+    metadata: Metadata,
+    options?: Partial<CallOptions>,
+  ): ClientDuplexStream<CreateTodoRequest, FailedTodo>;
 }
 
 export const TodoServiceClient = makeGenericClientConstructor(TodoServiceService, "todo.v1.TodoService") as unknown as {
