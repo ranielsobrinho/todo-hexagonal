@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Todo Hexagonal Architecture",
+    "subtitle": "Ports & Adapters with Fastify HTTP, gRPC, and PostgreSQL",
+    "output": "architecture.html",
+    "quality_profile": "showcase",
+    "visual_preset": "blueprint",
+    "repository": {
+      "url": "https://github.com/ranielsobrinho/todo-hexagonal",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "6c73b13efd3f171f07d3da806fb071ea9ca76d52"
+    },
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "backend": { "label": "Application Layer", "visible": true },
+        "database": { "label": "Domain / Infrastructure", "visible": true },
+        "external": { "label": "Interfaces (HTTP/gRPC)", "visible": true },
+        "security": { "label": "Cross-cutting", "visible": true }
+      }
+    },
+    "views": [
+      {
+        "id": "overview",
+        "label": "Full Architecture",
+        "focus": [
+          "todoEntity",
+          "iTodoRepo",
+          "contracts",
+          "appErrors",
+          "useCases",
+          "pgRepo",
+          "dbPool",
+          "envConfig",
+          "httpAdapter",
+          "grpcAdapter",
+          "main"
+        ],
+        "note": "Complete hexagonal architecture"
+      },
+      {
+        "id": "domain",
+        "label": "Domain Core",
+        "focus": ["todoEntity", "iTodoRepo", "contracts", "appErrors"],
+        "note": "Pure domain: entities, ports, contracts"
+      },
+      {
+        "id": "app",
+        "label": "Application Layer",
+        "focus": ["useCases", "iTodoRepo", "todoEntity", "appErrors"],
+        "note": "Use cases depending on domain ports"
+      },
+      {
+        "id": "infra",
+        "label": "Infrastructure",
+        "focus": ["pgRepo", "dbPool", "envConfig", "iTodoRepo"],
+        "note": "Database and config adapters"
+      },
+      {
+        "id": "adapters",
+        "label": "Interface Adapters",
+        "focus": ["httpAdapter", "grpcAdapter", "useCases", "main"],
+        "note": "HTTP and gRPC adapters"
+      }
+    ]
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 6,
+    "gapX": 50,
+    "gapY": 40,
+    "cellW": 180,
+    "cellH": 100
+  },
+  "components": [
+    {
+      "id": "todoEntity",
+      "type": "database",
+      "label": "Todo Entity",
+      "sublabel": "id, name, createdAt, done",
+      "row": 0,
+      "col": 0,
+      "icon": "database",
+      "sources": [{ "path": "src/domain/entities/Todo.ts", "line": 1 }]
+    },
+    {
+      "id": "iTodoRepo",
+      "type": "database",
+      "label": "ITodoRepository",
+      "sublabel": "Port: save, getById, list, update, delete, finish",
+      "row": 1,
+      "col": 0,
+      "icon": "database",
+      "size": [200, 100],
+      "sources": [
+        { "path": "src/domain/repositories/ITodoRepository.ts", "line": 1 }
+      ]
+    },
+    {
+      "id": "contracts",
+      "type": "database",
+      "label": "Use Case Contracts",
+      "sublabel": "6 interfaces",
+      "row": 2,
+      "col": 0,
+      "icon": "briefcase",
+      "sources": [
+        { "path": "src/domain/contracts/todo/CreateTodoContract.ts", "line": 1 }
+      ]
+    },
+    {
+      "id": "appErrors",
+      "type": "security",
+      "label": "ApplicationError",
+      "sublabel": "VALIDATION_ERROR, NOT_FOUND",
+      "row": 3,
+      "col": 0,
+      "icon": "failure",
+      "sources": [
+        { "path": "src/domain/errors/ApplicationError.ts", "line": 1 }
+      ]
+    },
+    {
+      "id": "useCases",
+      "type": "backend",
+      "label": "Use Cases (6)",
+      "sublabel": "Create, GetById, List, Update, Delete, Finish",
+      "row": 1,
+      "col": 2,
+      "icon": "backend",
+      "size": [200, 100],
+      "sources": [
+        { "path": "src/usecases/todo/CreateTodoUseCase.ts", "line": 1 }
+      ]
+    },
+    {
+      "id": "pgRepo",
+      "type": "database",
+      "label": "PgTodoRepository",
+      "sublabel": "PostgreSQL implementation",
+      "row": 1,
+      "col": 4,
+      "icon": "database",
+      "sources": [
+        {
+          "path": "src/infrastructure/repositories/TodoRepository.ts",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "dbPool",
+      "type": "database",
+      "label": "PostgreSQL Pool",
+      "sublabel": "pg connection pool",
+      "row": 2,
+      "col": 4,
+      "icon": "database",
+      "sources": [{ "path": "src/infrastructure/database/pool.ts", "line": 1 }]
+    },
+    {
+      "id": "envConfig",
+      "type": "security",
+      "label": "Env Config",
+      "sublabel": "Validated env vars",
+      "row": 3,
+      "col": 4,
+      "icon": "security",
+      "sources": [{ "path": "src/infrastructure/config/env.ts", "line": 1 }]
+    },
+    {
+      "id": "httpAdapter",
+      "type": "external",
+      "label": "HTTP Adapter",
+      "sublabel": "Fastify: controllers, routes, server, presenter",
+      "row": 1,
+      "col": 5,
+      "icon": "external",
+      "size": [200, 100],
+      "sources": [{ "path": "src/interfaces/http/server.ts", "line": 1 }]
+    },
+    {
+      "id": "grpcAdapter",
+      "type": "external",
+      "label": "gRPC Adapter",
+      "sublabel": "Handlers, Routes, Server",
+      "row": 3,
+      "col": 5,
+      "icon": "external",
+      "sources": [{ "path": "src/interfaces/grpc/server.ts", "line": 1 }]
+    },
+    {
+      "id": "main",
+      "type": "external",
+      "label": "Main Entry",
+      "sublabel": "Boots HTTP + gRPC servers",
+      "row": 5,
+      "col": 2,
+      "icon": "start",
+      "sources": [{ "path": "src/main.ts", "line": 1 }]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Domain Layer",
+      "wraps": ["todoEntity", "iTodoRepo", "contracts", "appErrors"],
+      "pad": 15
+    },
+    {
+      "kind": "region",
+      "label": "Application Layer",
+      "wraps": ["useCases"],
+      "pad": 15
+    },
+    {
+      "kind": "region",
+      "label": "Infrastructure Layer",
+      "wraps": ["pgRepo", "dbPool", "envConfig"],
+      "pad": 15
+    },
+    {
+      "kind": "region",
+      "label": "Interface Adapters",
+      "wraps": ["httpAdapter", "grpcAdapter"],
+      "pad": 15
+    }
+  ],
+  "connections": [
+    {
+      "id": "uc-repo",
+      "from": "useCases",
+      "to": "iTodoRepo",
+      "label": "depends on (port)"
+    },
+    {
+      "id": "uc-entity",
+      "from": "useCases",
+      "to": "todoEntity",
+      "label": "creates/returns"
+    },
+    {
+      "id": "uc-errors",
+      "from": "useCases",
+      "to": "appErrors",
+      "label": "throws"
+    },
+    {
+      "id": "contracts-uc",
+      "from": "contracts",
+      "to": "useCases",
+      "label": "implemented by"
+    },
+    {
+      "id": "pgRepo-implements",
+      "from": "pgRepo",
+      "to": "iTodoRepo",
+      "label": "implements",
+      "variant": "emphasis"
+    },
+    {
+      "id": "pgRepo-entity",
+      "from": "pgRepo",
+      "to": "todoEntity",
+      "label": "maps to/from"
+    },
+    { "id": "pgRepo-pool", "from": "pgRepo", "to": "dbPool", "label": "uses" },
+    {
+      "id": "pgRepo-errors",
+      "from": "pgRepo",
+      "to": "appErrors",
+      "label": "throws"
+    },
+    {
+      "id": "http-uc",
+      "from": "httpAdapter",
+      "to": "useCases",
+      "label": "uses"
+    },
+    {
+      "id": "grpc-uc",
+      "from": "grpcAdapter",
+      "to": "useCases",
+      "label": "uses"
+    },
+    {
+      "id": "main-http",
+      "from": "main",
+      "to": "httpAdapter",
+      "label": "starts"
+    },
+    {
+      "id": "main-grpc",
+      "from": "main",
+      "to": "grpcAdapter",
+      "label": "starts"
+    },
+    {
+      "id": "main-db",
+      "from": "main",
+      "to": "dbPool",
+      "label": "checks connection"
+    },
+    {
+      "id": "main-env",
+      "from": "main",
+      "to": "envConfig",
+      "label": "reads config"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "Domain Core",
+      "items": [
+        "Todo entity",
+        "Repository port (ITodoRepository)",
+        "Use case contracts",
+        "ApplicationError"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Application Layer",
+      "items": ["6 Use Cases: Create, GetById, List, Update, Delete, Finish"]
+    },
+    {
+      "dot": "emerald",
+      "title": "Infrastructure",
+      "items": [
+        "PgTodoRepository (PostgreSQL)",
+        "Connection pool",
+        "Env config"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "HTTP Adapter",
+      "items": [
+        "Fastify server",
+        "6 REST controllers",
+        "TodoPresenter",
+        "Routes"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "gRPC Adapter",
+      "items": [
+        "gRPC server",
+        "7 handlers (incl. streaming)",
+        "Protobuf service definition"
+      ]
+    }
+  ]
+}

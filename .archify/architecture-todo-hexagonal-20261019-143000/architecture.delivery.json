@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "ce208f1f-7863-42d6-a471-f34d3ed801ca",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/candidate.json",
+  "output": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+  "specification": {
+    "sha256": "4a98318a207215b2b979424fd2ae3b5e3180d5ef8cb89c959a9271e84d23a8ac",
+    "bytes": 7644
+  },
+  "artifact": {
+    "sha256": "577bd89416c1750c6b0474112e7d6191f8e0a3335b9138bc145d37babe42a91e",
+    "bytes": 841038
+  }
+}
