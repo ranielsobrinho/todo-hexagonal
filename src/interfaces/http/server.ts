@@ -49,14 +49,6 @@ export async function buildServer(
   // Register Swagger/OpenAPI documentation
   await registerSwagger(app)
 
-  // Redirect /docs to /swagger
-  app.get('/docs', async (_request, reply) => {
-    return reply.redirect('/swagger')
-  })
-  app.get('/docs/', async (_request, reply) => {
-    return reply.redirect('/swagger')
-  })
-
   app.register(apiRoutes, { prefix: API_PREFIX, ...deps })
   app.register(healthRoutes)
 
