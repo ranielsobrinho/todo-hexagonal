@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/candidate.json",
+    "sha256": "4a98318a207215b2b979424fd2ae3b5e3180d5ef8cb89c959a9271e84d23a8ac",
+    "bytes": 7644
+  },
+  "artifact": {
+    "path": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+    "sha256": "577bd89416c1750c6b0474112e7d6191f8e0a3335b9138bc145d37babe42a91e",
+    "bytes": 841038
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.finalize.json",
+    "summaryReceipt": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.finalize-summary.json",
+    "browserCheckReceipt": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-19T22:28:58.206Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 3500,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 12,
+      "routesOverSuggestedBends": 6
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "uc-errors",
+            "from": "useCases",
+            "to": "appErrors",
+            "label": "throws",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "right": {
+            "id": "contracts-uc",
+            "from": "contracts",
+            "to": "useCases",
+            "label": "implemented by",
+            "collectionIndex": 3,
+            "artifactIndex": 4
+          },
+          "point": [322, 376],
+          "sharedNode": "useCases"
+        },
+        {
+          "left": {
+            "id": "uc-errors",
+            "from": "useCases",
+            "to": "appErrors",
+            "label": "throws",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "right": {
+            "id": "pgRepo-implements",
+            "from": "pgRepo",
+            "to": "iTodoRepo",
+            "label": "implements",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "point": [336.39999999999986, 291]
+        },
+        {
+          "left": {
+            "id": "uc-errors",
+            "from": "useCases",
+            "to": "appErrors",
+            "label": "throws",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "right": {
+            "id": "pgRepo-errors",
+            "from": "pgRepo",
+            "to": "appErrors",
+            "label": "throws",
+            "collectionIndex": 7,
+            "artifactIndex": 8
+          },
+          "point": [322, 497],
+          "sharedNode": "appErrors"
+        },
+        {
+          "left": {
+            "id": "contracts-uc",
+            "from": "contracts",
+            "to": "useCases",
+            "label": "implemented by",
+            "collectionIndex": 3,
+            "artifactIndex": 4
+          },
+          "right": {
+            "id": "pgRepo-implements",
+            "from": "pgRepo",
+            "to": "iTodoRepo",
+            "label": "implements",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "point": [516, 347.99999999999994]
+        },
+        {
+          "left": {
+            "id": "pgRepo-implements",
+            "from": "pgRepo",
+            "to": "iTodoRepo",
+            "label": "implements",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "pgRepo-errors",
+            "from": "pgRepo",
+            "to": "appErrors",
+            "label": "throws",
+            "collectionIndex": 7,
+            "artifactIndex": 8
+          },
+          "point": [790.8000000000001, 303.99999999999994],
+          "sharedNode": "pgRepo"
+        },
+        {
+          "left": {
+            "id": "pgRepo-implements",
+            "from": "pgRepo",
+            "to": "iTodoRepo",
+            "label": "implements",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "grpc-uc",
+            "from": "grpcAdapter",
+            "to": "useCases",
+            "label": "uses",
+            "collectionIndex": 9,
+            "artifactIndex": 10
+          },
+          "point": [724, 303.9999999999999]
+        },
+        {
+          "left": {
+            "id": "pgRepo-entity",
+            "from": "pgRepo",
+            "to": "todoEntity",
+            "label": "maps to/from",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "right": {
+            "id": "http-uc",
+            "from": "httpAdapter",
+            "to": "useCases",
+            "label": "uses",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "point": [1020, 204]
+        },
+        {
+          "left": {
+            "id": "pgRepo-pool",
+            "from": "pgRepo",
+            "to": "dbPool",
+            "label": "uses",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "right": {
+            "id": "grpc-uc",
+            "from": "grpcAdapter",
+            "to": "useCases",
+            "label": "uses",
+            "collectionIndex": 9,
+            "artifactIndex": 10
+          },
+          "point": [1020, 348]
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "uc-repo",
+            "from": "useCases",
+            "to": "iTodoRepo",
+            "label": "depends on (port)",
+            "collectionIndex": 0,
+            "artifactIndex": 1
+          },
+          "bends": 3,
+          "stretch": 1.119
+        },
+        {
+          "relationship": {
+            "id": "pgRepo-implements",
+            "from": "pgRepo",
+            "to": "iTodoRepo",
+            "label": "implements",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "bends": 5,
+          "stretch": 1.174
+        },
+        {
+          "relationship": {
+            "id": "pgRepo-errors",
+            "from": "pgRepo",
+            "to": "appErrors",
+            "label": "throws",
+            "collectionIndex": 7,
+            "artifactIndex": 8
+          },
+          "bends": 4,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "http-uc",
+            "from": "httpAdapter",
+            "to": "useCases",
+            "label": "uses",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "bends": 4,
+          "stretch": 1.241,
+          "directCorridorBlockers": [
+            {
+              "id": "pgRepo",
+              "label": "PgTodoRepository",
+              "box": [960, 220, 120, 60]
+            }
+          ]
+        },
+        {
+          "relationship": {
+            "id": "grpc-uc",
+            "from": "grpcAdapter",
+            "to": "useCases",
+            "label": "uses",
+            "collectionIndex": 9,
+            "artifactIndex": 10
+          },
+          "bends": 4,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "main-http",
+            "from": "main",
+            "to": "httpAdapter",
+            "label": "starts",
+            "collectionIndex": 10,
+            "artifactIndex": 11
+          },
+          "bends": 3,
+          "stretch": 1.04
+        }
+      ],
+      "truncated": true
+    },
+    "hints": [
+      "main has 4 relationships facing its right side, which fits 3 ports: make that side at least 74px, or move some of those neighbours so they face another side of main.",
+      "useCases → appErrors and contracts → useCases cross next to useCases: move node appErrors or contracts so the two reach useCases from different sides (for example one level with it, one directly above or below it).",
+      "useCases → appErrors crosses pgRepo → iTodoRepo: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "useCases → appErrors and pgRepo → appErrors cross next to appErrors: move node useCases or pgRepo so the two reach appErrors from different sides (for example one level with it, one directly above or below it).",
+      "contracts → useCases crosses pgRepo → iTodoRepo: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "pgRepo → iTodoRepo and pgRepo → appErrors cross next to pgRepo: move node iTodoRepo or appErrors so the two reach pgRepo from different sides (for example one level with it, one directly above or below it).",
+      "pgRepo → iTodoRepo crosses grpcAdapter → useCases: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "pgRepo → todoEntity crosses httpAdapter → useCases: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

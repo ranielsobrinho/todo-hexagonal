@@ -1,0 +1,1318 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "startedAt": "2026-10-19T22:36:23.853Z",
+  "specification": {
+    "path": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/candidate.json",
+    "sha256": "4a98318a207215b2b979424fd2ae3b5e3180d5ef8cb89c959a9271e84d23a8ac",
+    "bytes": 7644
+  },
+  "artifact": {
+    "path": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+    "sha256": "577bd89416c1750c6b0474112e7d6191f8e0a3335b9138bc145d37babe42a91e",
+    "bytes": 841038
+  },
+  "stages": {
+    "validate": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": null,
+      "execution": "embedded-in-deliver",
+      "command": [
+        "/home/ranielsobrinho/.config/nvm/versions/node/v24.16.0/bin/node",
+        "/home/ranielsobrinho/.agents/skills/archify/bin/archify.mjs",
+        "deliver",
+        "architecture",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/candidate.json",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": true,
+        "command": "validate",
+        "specification": {
+          "sha256": "4a98318a207215b2b979424fd2ae3b5e3180d5ef8cb89c959a9271e84d23a8ac",
+          "bytes": 7644
+        },
+        "validation": {
+          "checksPassed": 9,
+          "checkCount": 9,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        }
+      }
+    },
+    "deliver": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 541,
+      "command": [
+        "/home/ranielsobrinho/.config/nvm/versions/node/v24.16.0/bin/node",
+        "/home/ranielsobrinho/.agents/skills/archify/bin/archify.mjs",
+        "deliver",
+        "architecture",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/candidate.json",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "receiptId": "ce208f1f-7863-42d6-a471-f34d3ed801ca",
+        "ok": true,
+        "command": "deliver",
+        "type": "architecture",
+        "input": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/candidate.json",
+        "output": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+        "specification": {
+          "sha256": "4a98318a207215b2b979424fd2ae3b5e3180d5ef8cb89c959a9271e84d23a8ac",
+          "bytes": 7644
+        },
+        "artifact": {
+          "sha256": "577bd89416c1750c6b0474112e7d6191f8e0a3335b9138bc145d37babe42a91e",
+          "bytes": 841038
+        },
+        "validation": {
+          "checksPassed": 9,
+          "checkCount": 9,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        },
+        "evidence": {
+          "verified": true,
+          "repository": "https://github.com/ranielsobrinho/todo-hexagonal",
+          "revision": "6c73b13efd3f171f07d3da806fb071ea9ca76d52",
+          "references": 11
+        },
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      }
+    },
+    "check": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 161,
+      "command": [
+        "/home/ranielsobrinho/.config/nvm/versions/node/v24.16.0/bin/node",
+        "/home/ranielsobrinho/.agents/skills/archify/bin/archify.mjs",
+        "check",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+        "--require-provenance"
+      ],
+      "receipt": {
+        "ok": true,
+        "file": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+        "artifact": {
+          "sha256": "577bd89416c1750c6b0474112e7d6191f8e0a3335b9138bc145d37babe42a91e",
+          "bytes": 841038
+        },
+        "checks": [
+          {
+            "name": "single_svg",
+            "ok": true,
+            "details": ["found 1 <svg> block(s)"]
+          },
+          {
+            "name": "finite_svg",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "orthogonal_arrows",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "label_route_clearance",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "relationship_crossings",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "relationship_corridors",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "container_border_runs",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "route_rhythm",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "legend_clearance",
+            "ok": true,
+            "details": []
+          }
+        ],
+        "composition": {
+          "schemaVersion": 1,
+          "profile": "showcase",
+          "status": "pass",
+          "summary": {
+            "errors": 0,
+            "warnings": 0
+          },
+          "metrics": {
+            "properCrossings": 0,
+            "resolvedCrossovers": 12,
+            "ambiguousCorridors": 0,
+            "arrowheadCollisions": 0,
+            "containerBorderRuns": 0,
+            "labelRouteClearanceIssues": 0,
+            "labelCanvasOverflowIssues": 0,
+            "minLabelRouteClearance": 6,
+            "desktopReadabilityIssues": 0,
+            "viewportHeightIssues": 0,
+            "minProjectedNodeTextPx": 6.054671280276816,
+            "maxBends": 5,
+            "routesOverSuggestedBends": 6,
+            "maxStretch": 1.241,
+            "routesOverSuggestedStretch": 0,
+            "minSegmentPx": 24,
+            "minInteriorSegmentPx": 26,
+            "shortSegmentCount": 0,
+            "shortEndpointSegmentCount": 0,
+            "shortInteriorSegmentCount": 0,
+            "microSegmentCount": 0
+          },
+          "suggestedLimits": {
+            "bendsPerRelationship": 2,
+            "stretch": 1.35,
+            "segmentPx": 16,
+            "microSegmentPx": 8
+          },
+          "routeReview": {
+            "crossings": [
+              {
+                "left": {
+                  "id": "uc-errors",
+                  "from": "useCases",
+                  "to": "appErrors",
+                  "label": "throws",
+                  "collectionIndex": 2,
+                  "artifactIndex": 3
+                },
+                "right": {
+                  "id": "contracts-uc",
+                  "from": "contracts",
+                  "to": "useCases",
+                  "label": "implemented by",
+                  "collectionIndex": 3,
+                  "artifactIndex": 4
+                },
+                "point": [322, 376],
+                "sharedNode": "useCases"
+              },
+              {
+                "left": {
+                  "id": "uc-errors",
+                  "from": "useCases",
+                  "to": "appErrors",
+                  "label": "throws",
+                  "collectionIndex": 2,
+                  "artifactIndex": 3
+                },
+                "right": {
+                  "id": "pgRepo-implements",
+                  "from": "pgRepo",
+                  "to": "iTodoRepo",
+                  "label": "implements",
+                  "collectionIndex": 4,
+                  "artifactIndex": 5
+                },
+                "point": [336.39999999999986, 291]
+              },
+              {
+                "left": {
+                  "id": "uc-errors",
+                  "from": "useCases",
+                  "to": "appErrors",
+                  "label": "throws",
+                  "collectionIndex": 2,
+                  "artifactIndex": 3
+                },
+                "right": {
+                  "id": "pgRepo-errors",
+                  "from": "pgRepo",
+                  "to": "appErrors",
+                  "label": "throws",
+                  "collectionIndex": 7,
+                  "artifactIndex": 8
+                },
+                "point": [322, 497],
+                "sharedNode": "appErrors"
+              },
+              {
+                "left": {
+                  "id": "contracts-uc",
+                  "from": "contracts",
+                  "to": "useCases",
+                  "label": "implemented by",
+                  "collectionIndex": 3,
+                  "artifactIndex": 4
+                },
+                "right": {
+                  "id": "pgRepo-implements",
+                  "from": "pgRepo",
+                  "to": "iTodoRepo",
+                  "label": "implements",
+                  "collectionIndex": 4,
+                  "artifactIndex": 5
+                },
+                "point": [516, 347.99999999999994]
+              },
+              {
+                "left": {
+                  "id": "pgRepo-implements",
+                  "from": "pgRepo",
+                  "to": "iTodoRepo",
+                  "label": "implements",
+                  "collectionIndex": 4,
+                  "artifactIndex": 5
+                },
+                "right": {
+                  "id": "pgRepo-errors",
+                  "from": "pgRepo",
+                  "to": "appErrors",
+                  "label": "throws",
+                  "collectionIndex": 7,
+                  "artifactIndex": 8
+                },
+                "point": [790.8000000000001, 303.99999999999994],
+                "sharedNode": "pgRepo"
+              },
+              {
+                "left": {
+                  "id": "pgRepo-implements",
+                  "from": "pgRepo",
+                  "to": "iTodoRepo",
+                  "label": "implements",
+                  "collectionIndex": 4,
+                  "artifactIndex": 5
+                },
+                "right": {
+                  "id": "grpc-uc",
+                  "from": "grpcAdapter",
+                  "to": "useCases",
+                  "label": "uses",
+                  "collectionIndex": 9,
+                  "artifactIndex": 10
+                },
+                "point": [724, 303.9999999999999]
+              },
+              {
+                "left": {
+                  "id": "pgRepo-entity",
+                  "from": "pgRepo",
+                  "to": "todoEntity",
+                  "label": "maps to/from",
+                  "collectionIndex": 5,
+                  "artifactIndex": 6
+                },
+                "right": {
+                  "id": "http-uc",
+                  "from": "httpAdapter",
+                  "to": "useCases",
+                  "label": "uses",
+                  "collectionIndex": 8,
+                  "artifactIndex": 9
+                },
+                "point": [1020, 204]
+              },
+              {
+                "left": {
+                  "id": "pgRepo-pool",
+                  "from": "pgRepo",
+                  "to": "dbPool",
+                  "label": "uses",
+                  "collectionIndex": 6,
+                  "artifactIndex": 7
+                },
+                "right": {
+                  "id": "grpc-uc",
+                  "from": "grpcAdapter",
+                  "to": "useCases",
+                  "label": "uses",
+                  "collectionIndex": 9,
+                  "artifactIndex": 10
+                },
+                "point": [1020, 348]
+              },
+              {
+                "left": {
+                  "id": "pgRepo-errors",
+                  "from": "pgRepo",
+                  "to": "appErrors",
+                  "label": "throws",
+                  "collectionIndex": 7,
+                  "artifactIndex": 8
+                },
+                "right": {
+                  "id": "grpc-uc",
+                  "from": "grpcAdapter",
+                  "to": "useCases",
+                  "label": "uses",
+                  "collectionIndex": 9,
+                  "artifactIndex": 10
+                },
+                "point": [790.8000000000001, 348]
+              },
+              {
+                "left": {
+                  "id": "grpc-uc",
+                  "from": "grpcAdapter",
+                  "to": "useCases",
+                  "label": "uses",
+                  "collectionIndex": 9,
+                  "artifactIndex": 10
+                },
+                "right": {
+                  "id": "main-http",
+                  "from": "main",
+                  "to": "httpAdapter",
+                  "label": "starts",
+                  "collectionIndex": 10,
+                  "artifactIndex": 11
+                },
+                "point": [1166, 523]
+              },
+              {
+                "left": {
+                  "id": "main-http",
+                  "from": "main",
+                  "to": "httpAdapter",
+                  "label": "starts",
+                  "collectionIndex": 10,
+                  "artifactIndex": 11
+                },
+                "right": {
+                  "id": "main-grpc",
+                  "from": "main",
+                  "to": "grpcAdapter",
+                  "label": "starts",
+                  "collectionIndex": 11,
+                  "artifactIndex": 12
+                },
+                "point": [1166, 824],
+                "sharedNode": "main"
+              },
+              {
+                "left": {
+                  "id": "main-db",
+                  "from": "main",
+                  "to": "dbPool",
+                  "label": "checks connection",
+                  "collectionIndex": 12,
+                  "artifactIndex": 13
+                },
+                "right": {
+                  "id": "main-env",
+                  "from": "main",
+                  "to": "envConfig",
+                  "label": "reads config",
+                  "collectionIndex": 13,
+                  "artifactIndex": 14
+                },
+                "point": [936, 530],
+                "sharedNode": "main"
+              }
+            ],
+            "crowdedSides": [
+              {
+                "node": "main",
+                "label": "Main Entry",
+                "side": "right",
+                "relationships": 4,
+                "sidePx": 60,
+                "neededPx": 74
+              }
+            ],
+            "detours": [
+              {
+                "relationship": {
+                  "id": "uc-repo",
+                  "from": "useCases",
+                  "to": "iTodoRepo",
+                  "label": "depends on (port)",
+                  "collectionIndex": 0,
+                  "artifactIndex": 1
+                },
+                "bends": 3,
+                "stretch": 1.119
+              },
+              {
+                "relationship": {
+                  "id": "pgRepo-implements",
+                  "from": "pgRepo",
+                  "to": "iTodoRepo",
+                  "label": "implements",
+                  "collectionIndex": 4,
+                  "artifactIndex": 5
+                },
+                "bends": 5,
+                "stretch": 1.174
+              },
+              {
+                "relationship": {
+                  "id": "pgRepo-errors",
+                  "from": "pgRepo",
+                  "to": "appErrors",
+                  "label": "throws",
+                  "collectionIndex": 7,
+                  "artifactIndex": 8
+                },
+                "bends": 4,
+                "stretch": 1
+              },
+              {
+                "relationship": {
+                  "id": "http-uc",
+                  "from": "httpAdapter",
+                  "to": "useCases",
+                  "label": "uses",
+                  "collectionIndex": 8,
+                  "artifactIndex": 9
+                },
+                "bends": 4,
+                "stretch": 1.241,
+                "directCorridorBlockers": [
+                  {
+                    "id": "pgRepo",
+                    "label": "PgTodoRepository",
+                    "box": [960, 220, 120, 60]
+                  }
+                ]
+              },
+              {
+                "relationship": {
+                  "id": "grpc-uc",
+                  "from": "grpcAdapter",
+                  "to": "useCases",
+                  "label": "uses",
+                  "collectionIndex": 9,
+                  "artifactIndex": 10
+                },
+                "bends": 4,
+                "stretch": 1
+              },
+              {
+                "relationship": {
+                  "id": "main-http",
+                  "from": "main",
+                  "to": "httpAdapter",
+                  "label": "starts",
+                  "collectionIndex": 10,
+                  "artifactIndex": 11
+                },
+                "bends": 3,
+                "stretch": 1.04
+              }
+            ]
+          },
+          "leadingSpace": {
+            "measured": true,
+            "emptyTopPx": 55,
+            "emptyTopRatio": 0.059,
+            "occupiedTop": 55,
+            "viewBoxTop": 0,
+            "canvasHeight": 932,
+            "typicalNodeHeight": 60,
+            "reviewSuggested": false
+          },
+          "desktopReadability": {
+            "budgetBasis": "recognized-declared-wide",
+            "readerContract": "declared-wide-v1",
+            "availableDiagramWidth": 1346,
+            "actualBudgetPx": 1346,
+            "actualReaderWidth": 1376,
+            "desiredReaderWidth": 1475,
+            "viewportCap": 1376,
+            "limit": "viewport-cap",
+            "requestedTargetPx": 7.5,
+            "requestedTargetMet": false,
+            "hardFloorPx": 6,
+            "hardFloorMet": true,
+            "minimumOwner": {
+              "kind": "node",
+              "id": "iTodoRepo"
+            },
+            "minimumSourceTextPx": 6.5,
+            "minimumProjectedTextPx": 6.054671280276816,
+            "semanticTextCount": 40
+          },
+          "issues": []
+        },
+        "provenance": "current",
+        "deliveryReceiptId": "ce208f1f-7863-42d6-a471-f34d3ed801ca"
+      }
+    },
+    "browser-check": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 2621,
+      "command": [
+        "/home/ranielsobrinho/.config/nvm/versions/node/v24.16.0/bin/node",
+        "/home/ranielsobrinho/.agents/skills/archify/bin/archify.mjs",
+        "browser-check",
+        "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+        "--json",
+        "--require-provenance"
+      ],
+      "execution": "in-process",
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": true,
+        "command": "browser-check",
+        "evidenceKind": "automated-browser",
+        "status": "pass",
+        "visualReview": "not-requested",
+        "provenance": "current",
+        "deliveryReceiptId": "ce208f1f-7863-42d6-a471-f34d3ed801ca",
+        "artifact": {
+          "path": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.html",
+          "sha256": "577bd89416c1750c6b0474112e7d6191f8e0a3335b9138bc145d37babe42a91e",
+          "bytes": 841038
+        },
+        "state": {
+          "detail": "read",
+          "motion": "still"
+        },
+        "chrome": {
+          "status": "available",
+          "executable": "/usr/bin/chromium"
+        },
+        "diagnostics": [],
+        "containment": {
+          "status": "pass",
+          "policy": "fit-or-reader-declared-readable-vertical-scroll",
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "theme": "light",
+              "innerWidth": 1440,
+              "innerHeight": 900,
+              "scrollWidth": 1440,
+              "scrollHeight": 1036,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1376,
+              "diagramWidth": 1346,
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 78,
+                "diagramChromePx": 78,
+                "svgPx": 868,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.054671280276816,
+              "minimumProjectedNonEdgeTextPx": 6.054671280276816,
+              "minimumProjectedEdgeTextPx": 7.451903114186851,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "theme": "light",
+              "innerWidth": 1600,
+              "innerHeight": 1000,
+              "scrollWidth": 1600,
+              "scrollHeight": 1166,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1475,
+              "diagramWidth": 1445,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 932,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "theme": "light",
+              "innerWidth": 1920,
+              "innerHeight": 1080,
+              "scrollWidth": 1920,
+              "scrollHeight": 1166,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1475,
+              "diagramWidth": 1445,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 932,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "theme": "light",
+              "innerWidth": 2048,
+              "innerHeight": 1320,
+              "scrollWidth": 2048,
+              "scrollHeight": 1320,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1688,
+              "diagramWidth": 1638,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 94,
+                "diagramChromePx": 94,
+                "svgPx": 1056,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 44,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            }
+          ]
+        },
+        "themeStates": {
+          "status": "pass",
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 1440,
+              "height": 900,
+              "requestedTheme": "dark",
+              "resolvedTheme": "dark",
+              "ok": true
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "requestedTheme": "dark",
+              "resolvedTheme": "dark",
+              "ok": true
+            }
+          ]
+        },
+        "readability": {
+          "status": "pass",
+          "minimumProjectedNodeTextPx": 6,
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "theme": "light",
+              "innerWidth": 1440,
+              "innerHeight": 900,
+              "scrollWidth": 1440,
+              "scrollHeight": 1036,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1376,
+              "diagramWidth": 1346,
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 78,
+                "diagramChromePx": 78,
+                "svgPx": 868,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.054671280276816,
+              "minimumProjectedNonEdgeTextPx": 6.054671280276816,
+              "minimumProjectedEdgeTextPx": 7.451903114186851,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "theme": "light",
+              "innerWidth": 1600,
+              "innerHeight": 1000,
+              "scrollWidth": 1600,
+              "scrollHeight": 1166,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1475,
+              "diagramWidth": 1445,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 932,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "theme": "light",
+              "innerWidth": 1920,
+              "innerHeight": 1080,
+              "scrollWidth": 1920,
+              "scrollHeight": 1166,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1475,
+              "diagramWidth": 1445,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 932,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "theme": "light",
+              "innerWidth": 2048,
+              "innerHeight": 1320,
+              "scrollWidth": 2048,
+              "scrollHeight": 1320,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1688,
+              "diagramWidth": 1638,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 94,
+                "diagramChromePx": 94,
+                "svgPx": 1056,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 44,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            }
+          ]
+        },
+        "viewerChrome": {
+          "status": "pass",
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "theme": "light",
+              "innerWidth": 1440,
+              "innerHeight": 900,
+              "scrollWidth": 1440,
+              "scrollHeight": 1036,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1376,
+              "diagramWidth": 1346,
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 78,
+                "diagramChromePx": 78,
+                "svgPx": 868,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.054671280276816,
+              "minimumProjectedNonEdgeTextPx": 6.054671280276816,
+              "minimumProjectedEdgeTextPx": 7.451903114186851,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "theme": "light",
+              "innerWidth": 1600,
+              "innerHeight": 1000,
+              "scrollWidth": 1600,
+              "scrollHeight": 1166,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1475,
+              "diagramWidth": 1445,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 932,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "theme": "light",
+              "innerWidth": 1920,
+              "innerHeight": 1080,
+              "scrollWidth": 1920,
+              "scrollHeight": 1166,
+              "overflowX": false,
+              "overflowY": true,
+              "verticalScrollAccepted": true,
+              "overflowDisposition": "readable-vertical-scroll",
+              "readerLayout": "adaptive",
+              "readerOverflow": "authored",
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1475,
+              "diagramWidth": 1445,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 932,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "theme": "light",
+              "innerWidth": 2048,
+              "innerHeight": 1320,
+              "scrollWidth": 2048,
+              "scrollHeight": 1320,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "intrinsic-height",
+              "ok": true,
+              "readerWidth": 1688,
+              "diagramWidth": 1638,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 94,
+                "diagramChromePx": 94,
+                "svgPx": 1056,
+                "cardsPx": 0,
+                "viewBoxHeight": 932
+              },
+              "viewBoxWidth": 1445,
+              "minimumProjectedNodeTextPx": 6.5,
+              "minimumProjectedNonEdgeTextPx": 6.5,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Port: save, getById, list, update, delete, finish",
+              "minimumProjectedNodeTextDetail": "context",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "node",
+                "id": "iTodoRepo"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 44,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            }
+          ]
+        },
+        "captures": {
+          "status": "not-requested",
+          "screenshots": [],
+          "contactSheet": null
+        },
+        "sidecars": {
+          "receipt": "architecture.browser-check.json",
+          "files": []
+        }
+      }
+    }
+  },
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "diagnostics": [],
+  "evidence": {
+    "receipt": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.finalize.json",
+    "summaryReceipt": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.finalize-summary.json",
+    "browserCheckReceipt": "/home/ranielsobrinho/Desenvolvimento/projetos/todo-hexagonal/.archify/architecture-todo-hexagonal-20261019-143000/architecture.browser-check.json"
+  },
+  "visualReview": "not-requested",
+  "finishedAt": "2026-10-19T22:36:27.354Z",
+  "durationMs": 3500,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-19T22:28:58.206Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}
