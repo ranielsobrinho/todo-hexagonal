@@ -9,7 +9,7 @@ describe('security hardening', () => {
     let app: FastifyInstance
 
     beforeEach(async () => {
-      app = buildTestApp(new FakeTodoRepository())
+      app = await buildTestApp(new FakeTodoRepository())
       await app.ready()
     })
 
@@ -34,7 +34,7 @@ describe('security hardening', () => {
     let app: FastifyInstance
 
     beforeEach(async () => {
-      app = buildTestApp(new FakeTodoRepository(), {
+      app = await buildTestApp(new FakeTodoRepository(), {
         rateLimit: { max: 2, timeWindow: '1 minute' },
       })
       await app.ready()

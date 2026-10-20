@@ -7,7 +7,7 @@ import { makeTodoControllers } from './interfaces/http/factories/controllers/mak
 import { buildServer } from './interfaces/http/server.js'
 import { readFileSync } from 'node:fs'
 
-const app = buildServer(makeTodoControllers())
+const app = await buildServer(makeTodoControllers())
 
 const grpcCredentials = env.grpc.tls
   ? ServerCredentials.createSsl(

@@ -31,35 +31,36 @@ The domain and use cases know nothing about Fastify, gRPC, or `pg`. HTTP control
 | Tests             | Vitest 5 + `@vitest/coverage-v8`                      |
 | Code quality      | Prettier 3, Husky 9, lint-staged 17                   |
 | Dev runner        | `tsx` (watch mode)                                    |
+| **API Docs**      | **Swagger UI** (OpenAPI 3.0)                          |
 
 ## Architecture
 
 Hexagonal Architecture organizes code so that **dependencies always point inward**, toward the domain. The domain defines _ports_ (interfaces); the outer layers provide _adapters_ that implement them.
 
 ```
-            ┌───────────────────────────────────────────────┐
-            │                Interfaces                     │  driving adapters
-            │  HTTP: routes → controllers → presenters      │  (HTTP + gRPC in)
-            │  gRPC: service → handlers → presenters        │
-            └───────────────────────┬───────────────────────┘
-                                    │ depends on
-                                    ▼
-            ┌───────────────────────────────────────────────┐
-            │                 Use cases                     │  application rules
-            │  CreateTodo · GetTodoById · ListTodos         │
-            │  UpdateTodo · DeleteTodo · FinishTodo         │
-            └───────────────────────┬───────────────────────┘
-                                    │ depends on
-                                    ▼
-            ┌───────────────────────────────────────────────┐
-            │                  Domain                       │  business core
-            │  Todo · contracts · TodoRepository (port)     │  (no outward imports)
-            └───────────────────────▲───────────────────────┘
-                                    │ implements
-            ┌───────────────────────┴───────────────────────┐
-            │              Infrastructure                   │  driven adapters
-            │   PgTodoRepository · pg Pool                  │  (database out)
-            └───────────────────────────────────────────────┘
+             ┌───────────────────────────────────────────────┐
+             │                Interfaces                     │  driving adapters
+             │  HTTP: routes → controllers → presenters      │  (HTTP + gRPC in)
+             │  gRPC: service → handlers → presenters        │
+             └───────────────────────┬───────────────────────┘
+                                     │ depends on
+                                     ▼
+             ┌───────────────────────────────────────────────┐
+             │                 Use cases                     │  application rules
+             │  CreateTodo · GetTodoById · ListTodos         │
+             │  UpdateTodo · DeleteTodo · FinishTodo         │
+             └───────────────────────┬───────────────────────┘
+                                     │ depends on
+                                     ▼
+             ┌───────────────────────────────────────────────┐
+             │                  Domain                       │  business core
+             │  Todo · contracts · TodoRepository (port)     │  (no outward imports)
+             └───────────────────────▲───────────────────────┘
+                                     │ implements
+             ┌───────────────────────┴───────────────────────┐
+             │              Infrastructure                   │  driven adapters
+             │   PgTodoRepository · pg Pool                  │  (database out)
+             └───────────────────────────────────────────────┘
 ```
 
 ### Layers and responsibilities
@@ -112,7 +113,8 @@ src/
 │   ├── http/
 │   │   ├── errors/httpErrorHandler.ts   # Maps domain errors → HTTP status
 │   │   ├── routes/                       # apiRoutes, todoRoutes, healthRoutes
-│   │   └── server.ts                    # buildServer(dependencies)
+│   │   ├── server.ts                    # buildServer(dependencies)
+│   │   └── swagger.ts                   # OpenAPI/Swagger configuration
 │   └── grpc/
 │       ├── controllers/                 # gRPC handlers, one per RPC
 │       ├── errors/grpcErrorMapper.ts    # Maps domain errors → gRPC status
@@ -211,7 +213,24 @@ docker build -t todo-hexagonal .
 docker run --rm -p 3000:3000 -p 50051:50051 --env-file=.env todo-hexagonal
 ```
 
-## API
+## API Documentation
+
+### Swagger UI (Interactive)
+
+When the server is running, visit:
+
+- **Swagger UI**: `http://localhost:5000/docs` — Interactive API explorer
+- **OpenAPI JSON**: `http://localhost:5000/docs/json` — Machine-readable OpenAPI 3.0 spec
+
+The Swagger UI provides:
+
+- Interactive testing of all REST endpoints
+- Request/response schema documentation
+- Parameter descriptions and constraints
+- Example values
+- "Try it out" functionality for live API calls
+
+### REST API
 
 All application routes are versioned under `/api/v1`. Health check lives at the root.
 
@@ -348,6 +367,23 @@ The human-readable message travels in the `details` field, so clients should rea
 ### TLS
 
 When **both** `GRPC_TLS_CERT` and `GRPC_TLS_KEY` are set, the server loads the certificate/key pair and serves TLS; otherwise it uses insecure credentials.
+
+## Additional Documentation
+
+Markdown documentation files are available in `docs/content/docs/`:
+
+| Document                     | Description                      |
+| ---------------------------- | -------------------------------- |
+| `introduction.mdx`           | Getting started guide            |
+| `api/overview.mdx`           | API overview and quick reference |
+| `api/rest-api.mdx`           | Detailed REST API reference      |
+| `api/grpc-api.mdx`           | Detailed gRPC API reference      |
+| `architecture/hexagonal.mdx` | Hexagonal architecture deep dive |
+| `architecture/testing.mdx`   | Testing strategy                 |
+| `guides/development.mdx`     | Development setup guide          |
+| `guides/deployment.mdx`      | Production deployment guide      |
+
+These files can be rendered with any MDX-compatible viewer or static site generator (VitePress, Docusaurus, Next.js + Fumadocs, etc.).
 
 ## Security
 

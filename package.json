@@ -2,7 +2,7 @@
   "name": "todo-hexagonal",
   "version": "1.0.0",
   "description": "Simple hexagonal architecture project",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/main.ts",
     "build": "pnpm proto:generate && tsc",
@@ -21,13 +21,15 @@
     "proto:generate": "mkdir -p src/interfaces/grpc/generated && grpc_tools_node_protoc --proto_path=. --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=src/interfaces/grpc/generated --ts_proto_opt=outputServices=grpc-js,esModuleInterop=true,env=node,importSuffix=.js proto/todo.proto"
   },
   "keywords": [],
-  "author": "",
+  "author": "Raniel Sobrinho",
   "license": "MIT",
   "type": "module",
   "dependencies": {
     "@bufbuild/protobuf": "^2.16.0",
     "@fastify/helmet": "^13.1.2",
     "@fastify/rate-limit": "^11.2.1",
+    "@fastify/swagger": "^9.9.2",
+    "@fastify/swagger-ui": "^5.2.6",
     "@grpc/grpc-js": "^1.14.6",
     "fastify": "^5.12.5",
     "pg": "^8.23.1"

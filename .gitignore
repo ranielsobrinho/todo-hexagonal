@@ -3,3 +3,5 @@ node_modules/
 dist/
 coverage/
 src/interfaces/grpc/generated/
+.fumadocs/
+docs/.fumadocs/

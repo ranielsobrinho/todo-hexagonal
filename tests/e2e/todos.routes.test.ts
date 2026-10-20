@@ -9,7 +9,7 @@ describe('todos routes', () => {
   let app: FastifyInstance
 
   beforeEach(async () => {
-    app = buildTestApp(new FakeTodoRepository())
+    app = await buildTestApp(new FakeTodoRepository())
     await app.ready()
   })
 

@@ -8,6 +8,7 @@ import {
   type ApiRoutesOptions,
 } from './routes/apiRoutes.js'
 import { healthRoutes } from './routes/healthRoutes.js'
+import { registerSwagger } from './swagger.js'
 
 export type HttpDependencies = ApiRoutesOptions
 
@@ -26,10 +27,10 @@ const REQUEST_TIMEOUT_MS = 15_000
 const DEFAULT_RATE_LIMIT_MAX = 100
 const DEFAULT_RATE_LIMIT_WINDOW = '1 minute'
 
-export function buildServer(
+export async function buildServer(
   deps: HttpDependencies,
   config: ServerConfig = {},
-): FastifyInstance {
+): Promise<FastifyInstance> {
   const app = Fastify({
     logger: config.logger ?? true,
     bodyLimit: BODY_LIMIT_BYTES,
@@ -44,6 +45,18 @@ export function buildServer(
     max: config.rateLimit?.max ?? DEFAULT_RATE_LIMIT_MAX,
     timeWindow: config.rateLimit?.timeWindow ?? DEFAULT_RATE_LIMIT_WINDOW,
   })
+
+  // Register Swagger/OpenAPI documentation
+  await registerSwagger(app)
+
+  // Redirect /docs to /swagger
+  app.get('/docs', async (_request, reply) => {
+    return reply.redirect('/swagger')
+  })
+  app.get('/docs/', async (_request, reply) => {
+    return reply.redirect('/swagger')
+  })
+
   app.register(apiRoutes, { prefix: API_PREFIX, ...deps })
   app.register(healthRoutes)
 
