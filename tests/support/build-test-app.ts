@@ -6,10 +6,10 @@ import {
   type ServerConfig,
 } from '../../src/interfaces/http/server.js'
 
-export function buildTestApp(
+export async function buildTestApp(
   repository: TodoRepository,
   config: ServerConfig = {},
-): FastifyInstance {
+): Promise<FastifyInstance> {
   return buildServer(makeTodoControllers(repository), {
     logger: false,
     ...config,

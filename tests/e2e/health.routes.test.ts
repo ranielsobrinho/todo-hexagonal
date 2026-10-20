@@ -16,7 +16,7 @@ describe('GET /health', () => {
 
   it('returns 200 when the database responds', async () => {
     query.mockResolvedValue({ rows: [{ '?column?': 1 }] })
-    const app = buildTestApp(new FakeTodoRepository())
+    const app = await buildTestApp(new FakeTodoRepository())
 
     const response = await app.inject({ method: 'GET', url: '/health' })
 
@@ -27,7 +27,7 @@ describe('GET /health', () => {
 
   it('returns 503 when the database fails', async () => {
     query.mockRejectedValue(new Error('connection refused'))
-    const app = buildTestApp(new FakeTodoRepository())
+    const app = await buildTestApp(new FakeTodoRepository())
 
     const response = await app.inject({ method: 'GET', url: '/health' })
 
