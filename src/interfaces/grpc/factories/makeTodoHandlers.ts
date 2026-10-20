@@ -13,6 +13,7 @@ import { DeleteTodoHandler } from '../controllers/DeleteTodoHandler.js'
 import type { TodoServiceDependencies } from '../routes/todoService.js'
 import { FinishTodoHandler } from '../controllers/FinishTodoHandler.js'
 import { makeFinishTodoUseCase } from '../../http/factories/usecases/makeFinishTodoUseCase.js'
+import { CreateTodosStreamHandler } from '../controllers/CreateTodosStreamHandler.js'
 
 export function makeTodoHandlers(
   repository: TodoRepository = makeTodoRepository(),
@@ -26,5 +27,8 @@ export function makeTodoHandlers(
     updateTodoHandler: new UpdateTodoHandler(makeUpdateTodoUseCase(repository)),
     deleteTodoHandler: new DeleteTodoHandler(makeDeleteTodoUseCase(repository)),
     finishTodoHandler: new FinishTodoHandler(makeFinishTodoUseCase(repository)),
+    createTodosStreamHandler: new CreateTodosStreamHandler(
+      makeCreateTodoUseCase(repository),
+    ),
   }
 }

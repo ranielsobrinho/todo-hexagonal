@@ -32,4 +32,10 @@ service TodoService {
   rpc UpdateTodo (UpdateTodoRequest) returns (Todo);
   rpc DeleteTodo (DeleteTodoRequest) returns (google.protobuf.Empty);
   rpc FinishTodo (FinishTodoRequest) returns (google.protobuf.Empty);
+  rpc CreateTodosStream (stream CreateTodoRequest) returns (stream FailedTodo);
+}
+
+message FailedTodo {
+  string name = 1;
+  string reason = 2;
 }

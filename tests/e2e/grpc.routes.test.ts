@@ -10,6 +10,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { makeTodoHandlers } from '../../src/interfaces/grpc/factories/makeTodoHandlers.js'
 import {
   TodoServiceClient,
+  type FailedTodo,
   type Todo,
 } from '../../src/interfaces/grpc/generated/proto/todo.js'
 import type { Empty } from '../../src/interfaces/grpc/generated/google/protobuf/empty.js'
@@ -157,5 +158,33 @@ describe('grpc todo service', () => {
     await expect(
       unary((callback) => client.finishTodo({ id: randomUUID() }, callback)),
     ).rejects.toMatchObject({ code: status.NOT_FOUND })
+  })
+
+  it('creates todos from a stream and returns only the failing ones', async () => {
+    const call = client.createTodosStream()
+    const failures: FailedTodo[] = []
+
+    call.on('data', (failure) => failures.push(failure))
+
+    const ended = new Promise<void>((resolve, reject) => {
+      call.on('end', resolve)
+      call.on('error', reject)
+    })
+
+    call.write({ name: 'first' })
+    call.write({ name: '' })
+    call.write({ name: 'second' })
+    call.end()
+
+    await ended
+
+    expect(failures).toEqual([{ name: '', reason: 'Name is required' }])
+
+    const all = await unary<{ todos: Todo[] }>((callback) =>
+      client.listTodos({ limit: 0, offset: 0 }, callback),
+    )
+    const names = all.todos.map((todo) => todo.name)
+    expect(names).toContain('first')
+    expect(names).toContain('second')
   })
 })
