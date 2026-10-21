@@ -1,26 +1,175 @@
 services:
-  db:
-    image: postgres:16
-    container_name: todo_hexagonal_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${PGUSER:-todo}
-      POSTGRES_PASSWORD: ${PGPASSWORD:-todo}
-      POSTGRES_DB: ${PGDATABASE:-todo_hexagonal}
+  # ──────────────────────────────────────────────
+  # Application
+  # ──────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: todo-hexagonal
     ports:
-      - '127.0.0.1:5432:5432'
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-      - todo_pgdata:/var/lib/postgresql/data
+      - '5000:5000' # HTTP REST API
+      - '50051:50051' # gRPC
+    environment:
+      - PORT=5000
+      - PGHOST=postgres
+      - PGPORT=5432
+      - PGUSER=todo
+      - PGPASSWORD=todo
+      - PGDATABASE=todo_hexagonal
+      - PGPOOL_MAX=10
+      - PGSSL=false
+      - GRPC_PORT=50051
+      # OpenTelemetry
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://otel-collector:4318/v1/logs
+      - OTEL_METRICS_PORT=9464
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      otel-collector:
+        condition: service_started
+    networks:
+      - observability
+    restart: unless-stopped
     healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'pg_isready -U ${PGUSER:-todo} -d ${PGDATABASE:-todo_hexagonal}',
-        ]
-      interval: 5s
+      test: ['CMD', 'curl', '-f', 'http://localhost:5000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ──────────────────────────────────────────────
+  # PostgreSQL Database
+  # ──────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: todo-postgres
+    environment:
+      POSTGRES_USER: todo
+      POSTGRES_PASSWORD: todo
+      POSTGRES_DB: todo_hexagonal
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - '5433:5432'
+    networks:
+      - observability
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U todo -d todo_hexagonal']
+      interval: 10s
       timeout: 5s
       retries: 5
 
+  # ──────────────────────────────────────────────
+  # OpenTelemetry Collector
+  # ──────────────────────────────────────────────
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.118.0
+    container_name: otel-collector
+    command:
+      - '--config=/etc/otel-collector-config.yaml'
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - '14317:4317' # OTLP gRPC
+      - '14318:4318' # OTLP HTTP
+      - '18888:8888' # Prometheus metrics (collector self-metrics)
+      - '23133:13133' # Health check
+    networks:
+      - observability
+    restart: unless-stopped
+    depends_on:
+      jaeger:
+        condition: service_healthy
+      prometheus:
+        condition: service_started
+
+  # ──────────────────────────────────────────────
+  # Jaeger (Traces)
+  # ──────────────────────────────────────────────
+  jaeger:
+    image: jaegertracing/all-in-one:1.58
+    container_name: jaeger
+    ports:
+      - '26686:16686' # Jaeger UI
+      - '24268:14268' # Jaeger HTTP collector
+      - '24250:14250' # Jaeger gRPC collector
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - SPAN_STORAGE_TYPE=badger
+    volumes:
+      - jaeger_data:/var/lib/jaeger
+    networks:
+      - observability
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:16686']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────
+  # Prometheus (Metrics)
+  # ──────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.54.0
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-remote-write-receiver'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - '19090:9090'
+    networks:
+      - observability
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:9090/-/healthy']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────
+  # Grafana (Visualization)
+  # ──────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: grafana
+    ports:
+      - '13000:3000'
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      # Note: grafana-opentelemetry-app not available in Grafana 11
+      # Using built-in OpenTelemetry support instead
+    volumes:
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./grafana-dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    networks:
+      - observability
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+      - jaeger
+
+networks:
+  observability:
+    driver: bridge
+
 volumes:
-  todo_pgdata:
+  postgres_data:
+  jaeger_data:
+  prometheus_data:
+  grafana_data:

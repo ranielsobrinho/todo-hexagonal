@@ -1,0 +1,179 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'todo-hexagonal'
+          static_configs:
+            - targets: ['app:9464']
+          metrics_path: '/metrics'
+          scrape_interval: 10s
+
+        - job_name: 'otel-collector'
+          static_configs:
+            - targets: ['localhost:8888']
+
+  jaeger:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:14250
+      thrift_http:
+        endpoint: 0.0.0.0:14268
+
+exporters:
+  otlp/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+
+  prometheusremotewrite:
+    endpoint: 'http://prometheus:9090/api/v1/write'
+
+  debug:
+    verbosity: detailed
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_max_size: 1024
+    send_batch_size: 512
+
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  resourcedetection:
+    detectors: [env, system]
+    timeout: 5s
+
+  transform:
+    trace_statements:
+      - context: span
+        statements:
+          - set(attributes["service.name"], "todo-hexagonal")
+
+  attributes:
+    actions:
+      - key: 'http.request.header.authorization'
+        action: delete
+      - key: 'http.request.header.cookie'
+        action: delete
+      - key: 'http.response.header.set-cookie'
+        action: delete
+
+  metricstransform:
+    transforms:
+      - include: http_server_request_duration
+        action: update
+        new_name: http.server.request.duration
+
+      - include: http_server_request_duration_bucket
+        action: update
+        new_name: http.server.request.duration
+
+      - include: http_server_request_duration_count
+        action: update
+        new_name: http.server.request.duration
+
+      - include: http_server_request_duration_sum
+        action: update
+        new_name: http.server.request.duration
+
+      - include: nodejs_eventloop_delay_max
+        action: update
+        new_name: process.runtime.nodejs.eventloop.delay.max
+      - include: nodejs_eventloop_delay_mean
+        action: update
+        new_name: process.runtime.nodejs.eventloop.delay.mean
+      - include: nodejs_eventloop_delay_min
+        action: update
+        new_name: process.runtime.nodejs.eventloop.delay.min
+      - include: nodejs_eventloop_delay_p50
+        action: update
+        new_name: process.runtime.nodejs.eventloop.delay.p50
+      - include: nodejs_eventloop_delay_p90
+        action: update
+        new_name: process.runtime.nodejs.eventloop.delay.p90
+      - include: nodejs_eventloop_delay_p99
+        action: update
+        new_name: process.runtime.nodejs.eventloop.delay.p99
+      - include: nodejs_eventloop_delay_stddev
+        action: update
+        new_name: process.runtime.nodejs.eventloop.delay.stddev
+
+      - include: nodejs_eventloop_time_total
+        action: update
+        new_name: process.runtime.nodejs.eventloop.time.total
+
+      - include: nodejs_eventloop_utilization
+        action: update
+        new_name: process.runtime.nodejs.eventloop.utilization
+
+      - include: v8js_gc_duration_bucket
+        action: update
+        new_name: process.runtime.nodejs.gc.duration
+      - include: v8js_gc_duration_count
+        action: update
+        new_name: process.runtime.nodejs.gc.duration
+      - include: v8js_gc_duration_sum
+        action: update
+        new_name: process.runtime.nodejs.gc.duration
+
+      - include: v8js_memory_heap_space_available_size
+        action: update
+        new_name: process.runtime.nodejs.memory.heap.space.available
+      - include: v8js_memory_heap_space_physical_size
+        action: update
+        new_name: process.runtime.nodejs.memory.heap.space.physical
+      - include: v8js_memory_heap_space_size
+        action: update
+        new_name: process.runtime.nodejs.memory.heap.space.size
+      - include: v8js_memory_heap_used
+        action: update
+        new_name: process.runtime.nodejs.memory.heap.used
+
+      - include: v8js_resource_active
+        action: update
+        new_name: process.runtime.nodejs.resource.active
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+  pprof:
+    endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      level: basic
+      address: 0.0.0.0:8888
+
+  extensions: [health_check, pprof, zpages]
+
+  pipelines:
+    traces:
+      receivers: [otlp, jaeger]
+      processors:
+        [memory_limiter, batch, resourcedetection, transform, attributes]
+      exporters: [otlp/jaeger, debug]
+
+    metrics:
+      receivers: [prometheus]
+      processors: [memory_limiter, batch, resourcedetection, metricstransform]
+      exporters: [prometheusremotewrite, debug]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resourcedetection, attributes]
+      exporters: [debug]
