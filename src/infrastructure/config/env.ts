@@ -8,10 +8,18 @@ export type PgConfig = {
   ssl: { rejectUnauthorized: boolean } | undefined
 }
 
+export type OtelConfig = {
+  tracesEndpoint: string
+  logsEndpoint: string
+  metricsPort: number
+}
+
 export type AppEnv = {
   port: number
   pg: PgConfig
   grpc: GrpcConfig
+  otel: OtelConfig
+  nodeEnv: string
 }
 
 export type GrpcConfig = {
@@ -25,6 +33,14 @@ function required(source: NodeJS.ProcessEnv, name: string): string {
     throw new Error(`Missing required environment variable: ${name}`)
   }
   return value
+}
+
+function optional(
+  source: NodeJS.ProcessEnv,
+  name: string,
+  fallback: string,
+): string {
+  return source[name] ?? fallback
 }
 
 function toPositiveNumber(value: string | undefined, fallback: number): number {
@@ -51,6 +67,20 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
       port: toPositiveNumber(source.GRPC_PORT, 50051),
       tls: certPath && keyPath ? { certPath, keyPath } : undefined,
     },
+    otel: {
+      tracesEndpoint: optional(
+        source,
+        'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT',
+        'http://localhost:4317',
+      ),
+      logsEndpoint: optional(
+        source,
+        'OTEL_EXPORTER_OTLP_LOGS_ENDPOINT',
+        'http://localhost:4317',
+      ),
+      metricsPort: toPositiveNumber(source.OTEL_METRICS_PORT, 9464),
+    },
+    nodeEnv: optional(source, 'NODE_ENV', 'development'),
   }
 }
 

@@ -46,7 +46,6 @@ export async function buildServer(
     timeWindow: config.rateLimit?.timeWindow ?? DEFAULT_RATE_LIMIT_WINDOW,
   })
 
-  // Register Swagger/OpenAPI documentation
   await registerSwagger(app)
 
   app.register(apiRoutes, { prefix: API_PREFIX, ...deps })

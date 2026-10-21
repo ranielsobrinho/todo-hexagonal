@@ -1,8 +1,13 @@
+import { initObservability } from './infrastructure/observability/otel.js'
+
+// Initialize OpenTelemetry BEFORE any other imports
+await initObservability()
+
 import { ServerCredentials } from '@grpc/grpc-js'
 import { env } from './infrastructure/config/env.js'
 import { pool } from './infrastructure/database/pool.js'
 import { makeTodoHandlers } from './interfaces/grpc/factories/makeTodoHandlers.js'
-import { buildGrpcServer } from './interfaces/grpc/server.js'
+import { buildGrpcServer, bindGrpcServer } from './interfaces/grpc/server.js'
 import { makeTodoControllers } from './interfaces/http/factories/controllers/makeTodoControllers.js'
 import { buildServer } from './interfaces/http/server.js'
 import { readFileSync } from 'node:fs'
@@ -40,18 +45,12 @@ try {
 }
 
 const grpcServer = buildGrpcServer(makeTodoHandlers())
-grpcServer.bindAsync(
-  `0.0.0.0:${env.grpc.port}`,
+const grpcPort = await bindGrpcServer(
+  grpcServer,
+  env.grpc.port,
   grpcCredentials,
-  (err, port) => {
-    if (err) {
-      app.log.error(err)
-      process.exit(1)
-    }
-
-    app.log.info(`gRPC listening on ${port}`)
-  },
 )
+app.log.info(`gRPC listening on ${grpcPort}`)
 
 const shutdown = async (signal: string): Promise<void> => {
   app.log.info(`received ${signal}, shutting down`)

@@ -30,6 +30,12 @@ describe('loadEnv', () => {
         ssl: { rejectUnauthorized: true },
       },
       grpc: { port: 50051, tls: undefined },
+      otel: {
+        tracesEndpoint: 'http://localhost:4317',
+        logsEndpoint: 'http://localhost:4317',
+        metricsPort: 9464,
+      },
+      nodeEnv: 'development',
     })
   })
 
@@ -40,6 +46,9 @@ describe('loadEnv', () => {
     expect(env.pg.port).toBe(5432)
     expect(env.pg.poolMax).toBe(10)
     expect(env.pg.ssl).toBeUndefined()
+    expect(env.otel.metricsPort).toBe(9464)
+    expect(env.otel.tracesEndpoint).toBe('http://localhost:4317')
+    expect(env.nodeEnv).toBe('development')
   })
 
   it('throws when a required variable is missing', () => {
